@@ -39,7 +39,8 @@
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;overflow:hidden}
-body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14px;line-height:1.5}
+/* 將基礎字體從 14px 放大到 16px */
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:16px;line-height:1.5}
 
 /* ── Layout ── */
 #app{display:flex;flex-direction:column;height:100vh;height:100dvh}
@@ -48,22 +49,22 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14
 #header{
   background:var(--bg2);
   border-bottom:1px solid var(--border);
-  padding:0 16px;
-  height:52px;
+  padding:0 18px;
+  height:60px; /* 加高 Header */
   display:flex;align-items:center;justify-content:space-between;
   flex-shrink:0;
   position:relative;z-index:50;
 }
-#header h1{font-family:var(--mono);font-size:15px;font-weight:600;letter-spacing:.5px}
+#header h1{font-family:var(--mono);font-size:18px;font-weight:600;letter-spacing:.5px} /* 標題放大 */
 #header h1 span{color:var(--teal)}
 .hdr-right{display:flex;align-items:center;gap:10px}
 #price-pill{
-  display:flex;align-items:center;gap:5px;
+  display:flex;align-items:center;gap:6px;
   background:var(--bg3);border:1px solid var(--border2);
-  border-radius:20px;padding:4px 10px;
-  font-family:var(--mono);font-size:11px;color:var(--text3);
+  border-radius:20px;padding:6px 12px;
+  font-family:var(--mono);font-size:13px;color:var(--text3); /* 放大報價標籤 */
 }
-#price-dot{width:6px;height:6px;border-radius:50%;background:var(--text3);flex-shrink:0}
+#price-dot{width:8px;height:8px;border-radius:50%;background:var(--text3);flex-shrink:0}
 #price-dot.live{background:var(--green);animation:pulse 2s infinite}
 #price-dot.err{background:var(--red)}
 
@@ -76,12 +77,12 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14
 }
 .tb{
   flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:10px 4px 8px;gap:4px;
-  font-size:11px;color:var(--text3);cursor:pointer;
-  border-bottom:2px solid transparent;
+  padding:12px 4px 10px;gap:6px; /* 增加觸控高度 */
+  font-size:13px;color:var(--text3);cursor:pointer;
+  border-bottom:3px solid transparent;
   transition:all .15s;
 }
-.tb .tb-icon{font-size:18px}
+.tb .tb-icon{font-size:22px} /* 放大 Icon */
 .tb.active{color:var(--text);border-bottom-color:var(--blue)}
 .tb.active.t-trade{border-bottom-color:var(--teal)}
 .tb.active.t-risk{border-bottom-color:var(--amber)}
@@ -89,75 +90,75 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14
 
 /* ── Content ── */
 #content{flex:1;overflow-y:auto;overscroll-behavior:contain}
-.panel{display:none;padding:16px;padding-bottom:24px}
+.panel{display:none;padding:18px;padding-bottom:32px}
 .panel.active{display:block}
 
 /* ── Cards ── */
-.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:12px}
-.card-header{padding:12px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
-.card-title{font-size:11px;font-weight:700;letter-spacing:.8px;color:var(--text2);text-transform:uppercase}
-.card-body{padding:14px}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:16px}
+.card-header{padding:16px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.card-title{font-size:14px;font-weight:700;letter-spacing:.8px;color:var(--text2);text-transform:uppercase}
+.card-body{padding:18px}
 
 /* ── Metrics ── */
-.metric-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
-.metric{background:var(--bg3);border-radius:var(--radius-sm);padding:12px}
-.metric-label{font-size:11px;color:var(--text3);margin-bottom:2px}
-.metric-val{font-family:var(--mono);font-size:20px;font-weight:600}
+.metric-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.metric{background:var(--bg3);border-radius:var(--radius-sm);padding:16px}
+.metric-label{font-size:13px;color:var(--text3);margin-bottom:4px}
+.metric-val{font-family:var(--mono);font-size:24px;font-weight:600} /* 數字顯著放大 */
 .metric-val.up{color:var(--green)}
 .metric-val.down{color:var(--red)}
 .metric-val.warn{color:var(--amber)}
 .metric-val.neutral{color:var(--text)}
-.metric-sub{font-size:11px;color:var(--text3);margin-top:2px}
+.metric-sub{font-size:13px;color:var(--text3);margin-top:4px}
 
 /* ── Base RWD Grid System (Mobile First) ── */
-.rwd-grid { display: flex; flex-direction: column; gap: 12px; margin-bottom: 12px; }
-.rwd-col { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
-.rwd-grid .card, .rwd-grid .metric-row { margin-bottom: 0; } /* 取消原本元件的下邊距，改由 Grid Gap 接手 */
+.rwd-grid { display: flex; flex-direction: column; gap: 16px; margin-bottom: 16px; }
+.rwd-col { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.rwd-grid .card, .rwd-grid .metric-row { margin-bottom: 0; } 
 
 /* ── Ticker list ── */
 .ticker-section-label{
-  font-size:10px;font-weight:700;letter-spacing:1px;
-  padding:8px 14px 6px;
+  font-size:12px;font-weight:700;letter-spacing:1px;
+  padding:10px 18px 8px;
   color:var(--text3);text-transform:uppercase;
   border-bottom:1px solid var(--border);
 }
 .ticker-section-label.etf-lbl{color:var(--teal)}
 .ticker-section-label.stk-lbl{color:var(--amber)}
 .ticker-row{
-  display:flex;align-items:center;gap:10px;
-  padding:11px 14px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:12px;
+  padding:14px 18px;border-bottom:1px solid var(--border);
   cursor:pointer;transition:background .1s;
 }
 .ticker-row:last-child{border-bottom:none}
 .ticker-row:active{background:var(--bg3)}
 .ticker-left{flex:1;min-width:0}
-.ticker-sym{font-family:var(--mono);font-size:13px;font-weight:600}
-.ticker-name{font-size:11px;color:var(--text2);margin-top:1px}
+.ticker-sym{font-family:var(--mono);font-size:17px;font-weight:600}
+.ticker-name{font-size:14px;color:var(--text2);margin-top:2px}
 .ticker-right{text-align:right}
-.ticker-price{font-family:var(--mono);font-size:15px;font-weight:600}
-.ticker-chg{font-family:var(--mono);font-size:11px;margin-top:1px}
+.ticker-price{font-family:var(--mono);font-size:20px;font-weight:600}
+.ticker-chg{font-family:var(--mono);font-size:14px;margin-top:2px}
 @keyframes flashUp{0%{background:rgba(52,211,153,.25)}100%{background:transparent}}
 @keyframes flashDown{0%{background:rgba(248,113,113,.25)}100%{background:transparent}}
 .flash-up{animation:flashUp .6s ease}
 .flash-down{animation:flashDown .6s ease}
 
 /* ── Forms ── */
-.form-row{margin-bottom:12px}
-.form-label{font-size:11px;font-weight:600;color:var(--text2);display:block;margin-bottom:6px;letter-spacing:.3px}
-.form-hint{font-size:11px;color:var(--text3);margin-top:4px}
+.form-row{margin-bottom:16px}
+.form-label{font-size:14px;font-weight:600;color:var(--text2);display:block;margin-bottom:8px;letter-spacing:.3px}
+.form-hint{font-size:13px;color:var(--text3);margin-top:6px}
 input,select{
   width:100%;background:var(--bg3);border:1px solid var(--border2);
   color:var(--text);border-radius:var(--radius-sm);
-  padding:10px 12px;font-family:var(--sans);font-size:14px;
+  padding:14px 16px;font-family:var(--sans);font-size:16px; /* 放大表單字體與Padding */
   -webkit-appearance:none;appearance:none;outline:none;
 }
 input:focus,select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(96,165,250,.12)}
-select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238892a4' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='10' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238892a4' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:40px}
 select option{background:var(--bg3)}
 input[readonly]{background:var(--bg4);color:var(--text2);cursor:default}
 
 /* ── Buttons ── */
-button{cursor:pointer;border:none;border-radius:var(--radius-sm);font-family:var(--sans);font-size:14px;font-weight:500;padding:10px 16px;transition:all .15s;-webkit-appearance:none}
+button{cursor:pointer;border:none;border-radius:var(--radius-sm);font-family:var(--sans);font-size:16px;font-weight:500;padding:14px 20px;transition:all .15s;-webkit-appearance:none}
 .btn{background:var(--bg3);border:1px solid var(--border2);color:var(--text)}
 .btn:active{opacity:.75}
 .btn-primary{background:var(--blue);color:#0a0c10}
@@ -165,19 +166,19 @@ button{cursor:pointer;border:none;border-radius:var(--radius-sm);font-family:var
 .btn-success{background:var(--green);color:#0a0c10}
 .btn-danger{background:var(--red);color:#0a0c10}
 .btn-warn{background:var(--amber);color:#0a0c10}
-.btn-full{width:100%;padding:13px}
-.btn-sm{padding:7px 12px;font-size:12px}
-.btn-row{display:flex;gap:8px}
+.btn-full{width:100%;padding:16px}
+.btn-sm{padding:10px 14px;font-size:14px}
+.btn-row{display:flex;gap:10px}
 .btn-row button{flex:1}
 
 /* ── Direction toggle ── */
-.dir-toggle{display:flex;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius-sm);overflow:hidden;margin-bottom:12px}
-.dir-btn{flex:1;padding:10px;text-align:center;font-size:14px;font-weight:600;cursor:pointer;transition:all .15s;color:var(--text3)}
+.dir-toggle{display:flex;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius-sm);overflow:hidden;margin-bottom:16px}
+.dir-btn{flex:1;padding:14px;text-align:center;font-size:16px;font-weight:600;cursor:pointer;transition:all .15s;color:var(--text3)}
 .dir-btn.active-buy{background:var(--green-bg);color:var(--green);border:1px solid rgba(52,211,153,.3)}
 .dir-btn.active-sell{background:var(--red-bg);color:var(--red);border:1px solid rgba(248,113,113,.3)}
 
 /* ── Badges & Banners ── */
-.badge{display:inline-flex;align-items:center;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:700;font-family:var(--mono)}
+.badge{display:inline-flex;align-items:center;padding:4px 10px;border-radius:6px;font-size:13px;font-weight:700;font-family:var(--mono)}
 .badge-etf{background:var(--teal-bg);color:var(--teal);border:1px solid var(--teal-bd)}
 .badge-stock{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-bd)}
 .badge-pending{background:var(--blue-bg);color:var(--blue);border:1px solid rgba(96,165,250,.25)}
@@ -188,59 +189,59 @@ button{cursor:pointer;border:none;border-radius:var(--radius-sm);font-family:var
 .badge-approved{background:rgba(167,139,250,.1);color:#a78bfa;border:1px solid rgba(167,139,250,.3)}
 
 .rule-clock{
-  display:inline-flex;align-items:center;gap:5px;
+  display:inline-flex;align-items:center;gap:6px;
   background:var(--bg3);border:1px solid var(--border2);
-  border-radius:4px;padding:2px 8px;font-family:var(--mono);font-size:12px;
+  border-radius:4px;padding:4px 10px;font-family:var(--mono);font-size:13px;
 }
-.rule-clock .dot{width:7px;height:7px;border-radius:50%}
+.rule-clock .dot{width:8px;height:8px;border-radius:50%}
 .rule-clock.open-dot .dot{background:var(--green);animation:pulse 2s infinite}
 .rule-clock.close-dot .dot{background:var(--amber)}
 
-.violation-item{padding:11px 14px;border-bottom:1px solid var(--border);}
+.violation-item{padding:14px 18px;border-bottom:1px solid var(--border);}
 .violation-item:last-child{border-bottom:none}
-.violation-title{font-size:13px;font-weight:600;margin-bottom:3px}
+.violation-title{font-size:15px;font-weight:600;margin-bottom:4px}
 .violation-title.danger{color:var(--red)}
 .violation-title.warn{color:var(--amber)}
-.violation-desc{font-size:11px;color:var(--text2);margin-bottom:8px;line-height:1.6}
+.violation-desc{font-size:13px;color:var(--text2);margin-bottom:10px;line-height:1.6}
 .settle-section-hdr{
-  font-size:10px;font-weight:700;letter-spacing:.8px;color:var(--text3);
-  text-transform:uppercase;padding:8px 14px 4px;
+  font-size:12px;font-weight:700;letter-spacing:.8px;color:var(--text3);
+  text-transform:uppercase;padding:12px 18px 6px;
 }
 
 /* ── Lists ── */
-.order-item{padding:12px 14px;border-bottom:1px solid var(--border)}
+.order-item{padding:16px 18px;border-bottom:1px solid var(--border)}
 .order-item:last-child{border-bottom:none}
-.order-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
-.order-sym{font-family:var(--mono);font-size:14px;font-weight:600}
-.order-meta{font-size:11px;color:var(--text3);margin-top:2px}
-.order-amount{font-family:var(--mono);font-size:13px;font-weight:600;text-align:right}
+.order-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.order-sym{font-family:var(--mono);font-size:17px;font-weight:600}
+.order-meta{font-size:14px;color:var(--text3);margin-top:4px}
+.order-amount{font-family:var(--mono);font-size:16px;font-weight:600;text-align:right}
 
-.pos-item{padding:12px 14px;border-bottom:1px solid var(--border)}
+.pos-item{padding:16px 18px;border-bottom:1px solid var(--border)}
 .pos-item:last-child{border-bottom:none}
-.pos-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
-.pos-sym{font-family:var(--mono);font-size:14px;font-weight:600}
-.pos-pnl{font-family:var(--mono);font-size:14px;font-weight:600;text-align:right}
-.pos-detail{display:grid;grid-template-columns:1fr 1fr;gap:4px}
-.pos-detail-item{font-size:11px;color:var(--text3)}
+.pos-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
+.pos-sym{font-family:var(--mono);font-size:17px;font-weight:600}
+.pos-pnl{font-family:var(--mono);font-size:18px;font-weight:600;text-align:right}
+.pos-detail{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.pos-detail-item{font-size:14px;color:var(--text3)}
 .pos-detail-item span{color:var(--text2);font-family:var(--mono)}
 
 /* ── Risk bar ── */
-.risk-wrap{margin:10px 0}
-.risk-label-row{display:flex;justify-content:space-between;margin-bottom:5px;font-size:11px}
-.risk-bar-bg{background:var(--bg4);border-radius:4px;height:8px;overflow:hidden}
-.risk-bar-fill{height:100%;border-radius:4px;transition:width .4s}
+.risk-wrap{margin:12px 0}
+.risk-label-row{display:flex;justify-content:space-between;margin-bottom:8px;font-size:13px}
+.risk-bar-bg{background:var(--bg4);border-radius:6px;height:10px;overflow:hidden}
+.risk-bar-fill{height:100%;border-radius:6px;transition:width .4s}
 .risk-bar-fill.ok{background:var(--green)}
 .risk-bar-fill.warn{background:var(--amber)}
 .risk-bar-fill.danger{background:var(--red)}
 
 .freeze-banner{
   background:var(--red-bg);border:1px solid var(--red-bd);
-  border-radius:var(--radius-sm);padding:12px 14px;
-  display:flex;align-items:center;gap:10px;margin-bottom:12px;
+  border-radius:var(--radius-sm);padding:14px 18px;
+  display:flex;align-items:center;gap:12px;margin-bottom:16px;
 }
-.freeze-icon{font-size:20px;flex-shrink:0}
-.freeze-text strong{color:var(--red);font-size:13px;display:block}
-.freeze-text span{font-size:12px;color:var(--text2)}
+.freeze-icon{font-size:24px;flex-shrink:0}
+.freeze-text strong{color:var(--red);font-size:15px;display:block}
+.freeze-text span{font-size:14px;color:var(--text2)}
 
 /* ── Modals ── */
 .modal-bg{
@@ -258,28 +259,28 @@ button{cursor:pointer;border:none;border-radius:var(--radius-sm);font-family:var
   animation:slideUp .25s ease;
 }
 @keyframes slideUp{from{transform:translateY(40px);opacity:0}to{transform:translateY(0);opacity:1}}
-.modal-handle{width:36px;height:4px;background:var(--bg4);border-radius:2px;margin:10px auto 0}
-.modal-header{padding:14px 16px 12px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
-.modal-title{font-size:15px;font-weight:600}
-.modal-close{background:var(--bg3);border:1px solid var(--border2);color:var(--text2);width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;padding:0;cursor:pointer}
-.modal-body{padding:16px;overflow-y:auto;flex:1}
-.modal-footer{padding:12px 16px;border-top:1px solid var(--border);background:var(--bg2)}
+.modal-handle{width:42px;height:6px;background:var(--bg4);border-radius:3px;margin:12px auto 0}
+.modal-header{padding:16px 20px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.modal-title{font-size:17px;font-weight:600}
+.modal-close{background:var(--bg3);border:1px solid var(--border2);color:var(--text2);width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;padding:0;cursor:pointer}
+.modal-body{padding:20px;overflow-y:auto;flex:1}
+.modal-footer{padding:16px 20px;border-top:1px solid var(--border);background:var(--bg2)}
 
 /* ── Scorecard questions ── */
-.sc-order-summary{background:var(--bg3);border-radius:var(--radius-sm);padding:12px;margin-bottom:14px;display:flex;flex-wrap:wrap;gap:10px}
-.sc-sum-item .sc-sum-label{font-size:10px;color:var(--text3)}
-.sc-sum-item .sc-sum-val{font-family:var(--mono);font-size:13px;font-weight:600}
-.sc-question{margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid var(--border)}
+.sc-order-summary{background:var(--bg3);border-radius:var(--radius-sm);padding:16px;margin-bottom:18px;display:flex;flex-wrap:wrap;gap:12px}
+.sc-sum-item .sc-sum-label{font-size:12px;color:var(--text3)}
+.sc-sum-item .sc-sum-val{font-family:var(--mono);font-size:15px;font-weight:600}
+.sc-question{margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border)}
 .sc-question:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
-.sc-q-header{display:flex;gap:8px;margin-bottom:8px}
-.sc-q-num{width:22px;height:22px;border-radius:50%;background:var(--bg4);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:11px;color:var(--text3);flex-shrink:0}
-.sc-q-text{font-size:13px;color:var(--text);line-height:1.45;padding-top:2px}
-.sc-input{margin-bottom:8px}
-.sc-scores{display:flex;gap:6px}
+.sc-q-header{display:flex;gap:10px;margin-bottom:10px}
+.sc-q-num{width:28px;height:28px;border-radius:50%;background:var(--bg4);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:14px;color:var(--text3);flex-shrink:0}
+.sc-q-text{font-size:15px;color:var(--text);line-height:1.45;padding-top:2px}
+.sc-input{margin-bottom:10px}
+.sc-scores{display:flex;gap:8px}
 .sc-dot{
-  flex:1;height:32px;border:1px solid var(--border2);border-radius:6px;
+  flex:1;height:42px;border:1px solid var(--border2);border-radius:6px;
   display:flex;align-items:center;justify-content:center;
-  font-family:var(--mono);font-size:13px;color:var(--text3);cursor:pointer;
+  font-family:var(--mono);font-size:16px;font-weight:600;color:var(--text3);cursor:pointer;
   transition:all .15s;
 }
 .sc-dot.s1{background:rgba(248,113,113,.2);color:var(--red);border-color:var(--red-bd)}
@@ -288,36 +289,36 @@ button{cursor:pointer;border:none;border-radius:var(--radius-sm);font-family:var
 .sc-dot.s4{background:var(--green-bg);color:var(--green);border-color:rgba(52,211,153,.3)}
 .sc-dot.s5{background:var(--teal-bg);color:var(--teal);border-color:var(--teal-bd)}
 .sc-total-row{
-  background:var(--bg3);border-radius:var(--radius-sm);padding:12px;
-  display:flex;align-items:center;justify-content:space-between;margin-top:14px;
+  background:var(--bg3);border-radius:var(--radius-sm);padding:16px;
+  display:flex;align-items:center;justify-content:space-between;margin-top:16px;
 }
-.sc-total-label{font-size:12px;color:var(--text2)}
-.sc-total-val{font-family:var(--mono);font-size:22px;font-weight:700;color:var(--blue)}
+.sc-total-label{font-size:15px;color:var(--text2)}
+.sc-total-val{font-family:var(--mono);font-size:28px;font-weight:700;color:var(--blue)}
 
 /* ── Review modal items ── */
-.review-sc-row{display:flex;gap:8px;padding:8px 0;border-bottom:1px solid var(--border);font-size:12px}
+.review-sc-row{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);font-size:14px}
 .review-sc-row:last-child{border-bottom:none}
 .review-sc-q{flex:1;color:var(--text2)}
-.review-sc-reason{color:var(--text3);font-size:11px;margin-top:2px}
+.review-sc-reason{color:var(--text3);font-size:13px;margin-top:4px}
 
 /* ── Chart & Toasts ── */
-.chart-wrap{position:relative;width:100%;height:200px;margin-top:4px}
-.toast-area{position:fixed;top:60px;left:50%;transform:translateX(-50%);width:calc(100% - 32px);max-width:400px;display:flex;flex-direction:column;gap:8px;z-index:300;pointer-events:none}
-.toast{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius-sm);padding:11px 14px;font-size:13px;box-shadow:0 8px 32px rgba(0,0,0,.5);animation:slideDown .2s ease;pointer-events:auto}
-.toast.success{border-left:3px solid var(--green)}
-.toast.danger{border-left:3px solid var(--red)}
-.toast.warn{border-left:3px solid var(--amber)}
-.toast.info{border-left:3px solid var(--blue)}
+.chart-wrap{position:relative;width:100%;height:240px;margin-top:6px} /* 圖表高度加大 */
+.toast-area{position:fixed;top:70px;left:50%;transform:translateX(-50%);width:calc(100% - 36px);max-width:440px;display:flex;flex-direction:column;gap:10px;z-index:300;pointer-events:none}
+.toast{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius-sm);padding:14px 18px;font-size:15px;box-shadow:0 8px 32px rgba(0,0,0,.5);animation:slideDown .2s ease;pointer-events:auto}
+.toast.success{border-left:4px solid var(--green)}
+.toast.danger{border-left:4px solid var(--red)}
+.toast.warn{border-left:4px solid var(--amber)}
+.toast.info{border-left:4px solid var(--blue)}
 @keyframes slideDown{from{transform:translateY(-10px);opacity:0}to{transform:translateY(0);opacity:1}}
 
 /* ── Misc ── */
-.empty-state{padding:40px 20px;text-align:center;color:var(--text3);font-size:13px}
-.divider{border:none;border-top:1px solid var(--border);margin:12px 0}
-.group-toggle{display:flex;gap:8px;margin-bottom:14px}
-.group-btn{flex:1;padding:9px;text-align:center;font-size:12px;font-weight:700;border-radius:var(--radius-sm);cursor:pointer;transition:all .15s;border:1px solid var(--border2);color:var(--text3);background:var(--bg3)}
+.empty-state{padding:50px 20px;text-align:center;color:var(--text3);font-size:15px}
+.divider{border:none;border-top:1px solid var(--border);margin:16px 0}
+.group-toggle{display:flex;gap:10px;margin-bottom:18px}
+.group-btn{flex:1;padding:12px;text-align:center;font-size:15px;font-weight:700;border-radius:var(--radius-sm);cursor:pointer;transition:all .15s;border:1px solid var(--border2);color:var(--text3);background:var(--bg3)}
 .group-btn.etf-active{background:var(--teal-bg);color:var(--teal);border-color:var(--teal-bd)}
 .group-btn.stk-active{background:var(--amber-bg);color:var(--amber);border-color:var(--amber-bd)}
-.tag{font-size:10px;color:var(--text3);font-family:var(--mono)}
+.tag{font-size:12px;color:var(--text3);font-family:var(--mono)}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 @keyframes spin{to{transform:rotate(360deg)}}
 
@@ -336,22 +337,22 @@ button{cursor:pointer;border:none;border-radius:var(--radius-sm);font-family:var
   animation:slideUp .25s ease;
 }
 .chart-modal-header{
-  padding:12px 16px;border-bottom:1px solid var(--border);
+  padding:16px 20px;border-bottom:1px solid var(--border);
   display:flex;align-items:center;justify-content:space-between;
   flex-shrink:0;
 }
 .chart-sym-info{flex:1}
-.chart-sym-name{font-family:var(--mono);font-size:16px;font-weight:700}
-.chart-sym-sub{font-size:12px;color:var(--text2);margin-top:1px}
+.chart-sym-name{font-family:var(--mono);font-size:18px;font-weight:700}
+.chart-sym-sub{font-size:14px;color:var(--text2);margin-top:2px}
 .chart-price-info{text-align:right}
-.chart-cur-price{font-family:var(--mono);font-size:18px;font-weight:700}
-.chart-cur-chg{font-family:var(--mono);font-size:12px;margin-top:1px}
+.chart-cur-price{font-family:var(--mono);font-size:22px;font-weight:700}
+.chart-cur-chg{font-family:var(--mono);font-size:14px;margin-top:2px}
 .tf-bar{
-  display:flex;gap:4px;padding:10px 16px 8px;
+  display:flex;gap:6px;padding:12px 20px 10px;
   border-bottom:1px solid var(--border);flex-shrink:0;
 }
 .tf-btn{
-  padding:5px 12px;border-radius:20px;font-size:12px;font-weight:600;
+  padding:8px 16px;border-radius:20px;font-size:14px;font-weight:600;
   font-family:var(--mono);cursor:pointer;
   background:var(--bg3);border:1px solid var(--border2);color:var(--text3);
   transition:all .15s;
@@ -359,11 +360,11 @@ button{cursor:pointer;border:none;border-radius:var(--radius-sm);font-family:var
 .tf-btn.active{background:var(--blue-bg);color:var(--blue);border-color:rgba(96,165,250,.4)}
 #chart-container{flex:1;min-height:0;position:relative}
 .chart-modal-footer{
-  padding:12px 16px;border-top:1px solid var(--border);flex-shrink:0;
+  padding:16px 20px;border-top:1px solid var(--border);flex-shrink:0;
 }
 .tax-row{
   display:flex;justify-content:space-between;align-items:center;
-  padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;
+  padding:10px 0;border-bottom:1px solid var(--border);font-size:15px;
 }
 .tax-row:last-child{border-bottom:none}
 .tax-label{color:var(--text2)}
@@ -373,7 +374,7 @@ button{cursor:pointer;border:none;border-radius:var(--radius-sm);font-family:var
 input[type="date"]{
   width:100%;background:var(--bg3);border:1px solid var(--border2);
   color:var(--text);border-radius:var(--radius-sm);
-  padding:10px 12px;font-family:var(--sans);font-size:14px;
+  padding:14px 16px;font-family:var(--sans);font-size:16px;
   -webkit-appearance:none;appearance:none;outline:none;
   color-scheme:dark;
 }
@@ -383,26 +384,19 @@ input[type="date"]:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(96,1
    Responsive Web Design (Tablet & Desktop) 
    ========================================= */
 @media (min-width: 768px) {
-  /* 整體縮放與邊距 */
-  body { font-size: 15px; }
-  .panel { padding: 24px 32px; max-width: 1400px; margin: 0 auto; }
+  body { font-size: 16px; }
+  .panel { padding: 32px 40px; max-width: 1400px; margin: 0 auto; }
   
-  /* 導覽列優化 */
-  #header { height: 64px; padding: 0 32px; }
-  #header h1 { font-size: 18px; }
-  #tabbar { justify-content: center; gap: 40px; height: 56px; }
-  .tb { flex: 0 1 auto; padding: 0 24px; font-size: 15px; flex-direction: row; gap: 10px; }
-  .tb .tb-icon { font-size: 20px; }
+  #header { height: 72px; padding: 0 40px; }
+  #header h1 { font-size: 20px; }
+  #tabbar { justify-content: center; gap: 48px; height: 64px; }
+  .tb { flex: 0 1 auto; padding: 0 32px; font-size: 16px; flex-direction: row; gap: 12px; }
+  .tb .tb-icon { font-size: 24px; }
   .tb:hover { background: rgba(255,255,255,0.03); border-radius: 8px 8px 0 0; }
 
-  /* 表單與按鈕 */
-  input, select, button { font-size: 15px; padding: 12px 16px; }
-  .btn-sm { font-size: 13px; padding: 8px 14px; }
-  
-  /* 彈出視窗轉為桌面 Dialog 樣式 */
   .modal-bg, .chart-modal-bg { align-items: center; padding: 40px; }
   .modal, .chart-modal { border-radius: 16px; animation: modalPop 0.3s cubic-bezier(0.16, 1, 0.3, 1); height: auto; margin: auto; }
-  .modal { max-width: 560px; max-height: 85vh; }
+  .modal { max-width: 600px; max-height: 85vh; }
   .chart-modal { max-width: 1000px; height: 80vh; }
   .modal-handle { display: none; }
   @keyframes modalPop { 
@@ -410,23 +404,18 @@ input[type="date"]:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(96,1
     to { transform: scale(1) translateY(0); opacity: 1; } 
   }
 
-  /* 提示吐司位置調整 */
-  .toast-area { top: 80px; right: 32px; left: auto; transform: none; width: 360px; }
-
-  /* 頂部群組按鈕限制寬度並置中 */
-  .group-toggle { max-width: 400px; margin: 0 auto 20px; }
+  .toast-area { top: 90px; right: 40px; left: auto; transform: none; width: 400px; }
+  .group-toggle { max-width: 440px; margin: 0 auto 24px; }
 }
 
 @media (min-width: 1024px) {
-  /* 啟動網格雙欄系統 */
-  .rwd-grid { flex-direction: row; gap: 24px; margin-bottom: 24px; align-items: flex-start; }
-  .rwd-col { gap: 24px; }
+  .rwd-grid { flex-direction: row; gap: 32px; margin-bottom: 32px; align-items: flex-start; }
+  .rwd-col { gap: 32px; }
   .rwd-col-wide { flex: 2; }
   .rwd-col-narrow { flex: 1; }
-  .card { margin-bottom: 24px; }
+  .card { margin-bottom: 32px; }
 }
 
-/* 電腦版細緻的滾動條 */
 @media (pointer: fine) {
   ::-webkit-scrollbar { width: 8px; height: 8px; }
   ::-webkit-scrollbar-track { background: transparent; }
@@ -445,7 +434,7 @@ input[type="date"]:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(96,1
         <div id="price-dot"></div>
         <span id="price-txt">參考報價</span>
       </div>
-      <div class="rule-clock" id="market-clock" style="font-size:11px">
+      <div class="rule-clock" id="market-clock" style="font-size:13px">
         <span class="dot"></span>
         <span id="market-status-txt">—</span>
       </div>
@@ -457,7 +446,7 @@ input[type="date"]:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(96,1
       <span class="tb-icon">📊</span>前台
     </div>
     <div class="tb t-risk" onclick="switchTab('risk')" style="position:relative">
-      <span id="viol-tab-dot" style="display:none;position:absolute;top:8px;right:18px;width:8px;height:8px;border-radius:50%;background:var(--red)"></span>
+      <span id="viol-tab-dot" style="display:none;position:absolute;top:10px;right:22px;width:10px;height:10px;border-radius:50%;background:var(--red)"></span>
       <span class="tb-icon">🛡️</span>中後台
     </div>
     <div class="tb t-history" onclick="switchTab('history')">
@@ -513,11 +502,11 @@ input[type="date"]:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(96,1
         <div class="rwd-col rwd-col-wide">
           <div class="card">
             <div class="card-header">
-              <span class="card-title">目前持倉</span>
+              <span class="card-title">庫存明細</span>
               <span class="tag" id="pos-count">0 筆</span>
             </div>
             <div id="positions-list">
-              <div class="empty-state">尚無持倉</div>
+              <div class="empty-state">目前無庫存</div>
             </div>
           </div>
 
@@ -541,7 +530,7 @@ input[type="date"]:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(96,1
                 <input type="number" id="order-qty" value="100" min="1" inputmode="numeric" oninput="onQtyChange()">
               </div>
 
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px">
                 <div>
                   <div class="form-label">參考報價</div>
                   <input type="text" id="order-price" readonly>
@@ -557,7 +546,8 @@ input[type="date"]:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(96,1
           </div>
         </div>
 
-      </div> </div>
+      </div> 
+    </div>
 
     <div id="panel-risk" class="panel">
 
@@ -575,7 +565,7 @@ input[type="date"]:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(96,1
           <div class="card">
             <div class="card-header">
               <span class="card-title" style="color:var(--teal)">ETF 組</span>
-              <div style="display:flex;gap:6px">
+              <div style="display:flex;gap:8px">
                 <button class="btn btn-sm btn-success" id="unfreeze-etf" style="display:none" onclick="unfreezeGroup('etf')">解凍</button>
               </div>
             </div>
@@ -583,22 +573,22 @@ input[type="date"]:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(96,1
               <div class="risk-wrap">
                 <div class="risk-label-row">
                   <span style="color:var(--text2)">回撤使用率</span>
-                  <span style="font-family:var(--mono);font-size:12px" id="etf-dd-label">0% / 10%</span>
+                  <span style="font-family:var(--mono);font-size:14px" id="etf-dd-label">0% / 10%</span>
                 </div>
                 <div class="risk-bar-bg"><div class="risk-bar-fill ok" id="etf-dd-bar" style="width:0%"></div></div>
               </div>
-              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:4px">
-                <div class="metric" style="padding:10px">
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:6px">
+                <div class="metric" style="padding:14px">
                   <div class="metric-label">最大回撤</div>
-                  <div class="metric-val neutral" style="font-size:16px" id="etf-dd-val">0.00%</div>
+                  <div class="metric-val neutral" style="font-size:20px" id="etf-dd-val">0.00%</div>
                 </div>
-                <div class="metric" style="padding:10px">
+                <div class="metric" style="padding:14px">
                   <div class="metric-label">資金使用</div>
-                  <div class="metric-val neutral" style="font-size:16px" id="etf-util">0%</div>
+                  <div class="metric-val neutral" style="font-size:20px" id="etf-util">0%</div>
                 </div>
-                <div class="metric" style="padding:10px">
+                <div class="metric" style="padding:14px">
                   <div class="metric-label">夏普值</div>
-                  <div class="metric-val neutral" style="font-size:16px" id="etf-sharpe">—</div>
+                  <div class="metric-val neutral" style="font-size:20px" id="etf-sharpe">—</div>
                 </div>
               </div>
             </div>
@@ -607,7 +597,7 @@ input[type="date"]:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(96,1
           <div class="card">
             <div class="card-header">
               <span class="card-title" style="color:var(--amber)">個股組</span>
-              <div style="display:flex;gap:6px">
+              <div style="display:flex;gap:8px">
                 <button class="btn btn-sm btn-success" id="unfreeze-stk" style="display:none" onclick="unfreezeGroup('stock')">解凍</button>
               </div>
             </div>
@@ -615,22 +605,22 @@ input[type="date"]:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(96,1
               <div class="risk-wrap">
                 <div class="risk-label-row">
                   <span style="color:var(--text2)">回撤使用率</span>
-                  <span style="font-family:var(--mono);font-size:12px" id="stk-dd-label">0% / 10%</span>
+                  <span style="font-family:var(--mono);font-size:14px" id="stk-dd-label">0% / 10%</span>
                 </div>
                 <div class="risk-bar-bg"><div class="risk-bar-fill ok" id="stk-dd-bar" style="width:0%"></div></div>
               </div>
-              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:4px">
-                <div class="metric" style="padding:10px">
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:6px">
+                <div class="metric" style="padding:14px">
                   <div class="metric-label">最大回撤</div>
-                  <div class="metric-val neutral" style="font-size:16px" id="stk-dd-val">0.00%</div>
+                  <div class="metric-val neutral" style="font-size:20px" id="stk-dd-val">0.00%</div>
                 </div>
-                <div class="metric" style="padding:10px">
+                <div class="metric" style="padding:14px">
                   <div class="metric-label">資金使用</div>
-                  <div class="metric-val neutral" style="font-size:16px" id="stk-util">0%</div>
+                  <div class="metric-val neutral" style="font-size:20px" id="stk-util">0%</div>
                 </div>
-                <div class="metric" style="padding:10px">
+                <div class="metric" style="padding:14px">
                   <div class="metric-label">夏普值</div>
-                  <div class="metric-val neutral" style="font-size:16px" id="stk-sharpe">—</div>
+                  <div class="metric-val neutral" style="font-size:20px" id="stk-sharpe">—</div>
                 </div>
               </div>
             </div>
@@ -639,7 +629,7 @@ input[type="date"]:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(96,1
           <div class="card">
             <div class="card-header">
               <span class="card-title">待審訂單</span>
-              <div style="display:flex;align-items:center;gap:6px">
+              <div style="display:flex;align-items:center;gap:8px">
                 <span class="badge badge-pending" id="pending-badge">0 筆</span>
                 <button class="btn btn-sm btn-warn" id="settle-btn" onclick="settleApprovedOrders()" style="display:none">⏰ 執行收盤結算</button>
               </div>
@@ -653,22 +643,22 @@ input[type="date"]:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(96,1
         <div class="rwd-col">
           <div class="card">
             <div class="card-header">
-              <span class="card-title">持倉管理 — 中後台平倉</span>
+              <span class="card-title">庫存管理 — 中後台強制處置</span>
             </div>
             <div class="card-body" style="padding:0 0 4px">
               <div style="display:flex;border-bottom:1px solid var(--border)">
-                <div class="settle-section-hdr" style="padding:10px 14px 8px;flex:1;border-bottom:none">
-                  ETF 組持倉
+                <div class="settle-section-hdr" style="padding:14px 18px 8px;flex:1;border-bottom:none">
+                  ETF 組庫存
                 </div>
               </div>
-              <div id="risk-pos-etf"><div class="empty-state" style="padding:16px">尚無持倉</div></div>
+              <div id="risk-pos-etf"><div class="empty-state" style="padding:20px">目前無庫存</div></div>
 
-              <div style="display:flex;border-bottom:1px solid var(--border);border-top:1px solid var(--border);margin-top:4px">
-                <div class="settle-section-hdr" style="padding:10px 14px 8px;flex:1;border-bottom:none">
-                  個股組持倉
+              <div style="display:flex;border-bottom:1px solid var(--border);border-top:1px solid var(--border);margin-top:6px">
+                <div class="settle-section-hdr" style="padding:14px 18px 8px;flex:1;border-bottom:none">
+                  個股組庫存
                 </div>
               </div>
-              <div id="risk-pos-stock"><div class="empty-state" style="padding:16px">尚無持倉</div></div>
+              <div id="risk-pos-stock"><div class="empty-state" style="padding:20px">目前無庫存</div></div>
             </div>
           </div>
 
@@ -688,7 +678,7 @@ input[type="date"]:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(96,1
 
           <div class="card">
             <div class="card-header"><span class="card-title">交易稅彙總</span></div>
-            <div class="card-body" style="padding:0 14px">
+            <div class="card-body" style="padding:0 18px">
               <div class="tax-row">
                 <span class="tax-label">ETF 組 — 已繳交易稅</span>
                 <span class="tax-val" id="tax-etf-amt">$0</span>
@@ -709,12 +699,14 @@ input[type="date"]:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(96,1
           </div>
         </div>
 
-      </div> <div class="card">
+      </div> 
+
+      <div class="card">
         <div class="card-header">
           <span class="card-title">NAV 走勢</span>
           <button class="btn btn-sm btn-success" onclick="settleNAV()">結算紀錄</button>
         </div>
-        <div class="card-body" style="padding:8px 14px 14px">
+        <div class="card-body" style="padding:10px 18px 18px">
           <div class="chart-wrap"><canvas id="nav-chart"></canvas></div>
         </div>
       </div>
@@ -730,12 +722,12 @@ input[type="date"]:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(96,1
           <div class="period-status">
             <div class="period-dot not-set" id="period-dot"></div>
             <div class="period-status-text">
-              <div id="period-status-label">尚未設定交易期間</div>
-              <div class="sub" id="period-status-sub">請選擇開始與結束日期</div>
+              <div id="period-status-label" style="font-size:15px">尚未設定交易期間</div>
+              <div class="sub" id="period-status-sub" style="font-size:13px">請選擇開始與結束日期</div>
             </div>
-            <div class="period-countdown" id="period-countdown"></div>
+            <div class="period-countdown" id="period-countdown" style="font-size:15px"></div>
           </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
             <div>
               <label class="form-label">開始日期</label>
               <input type="date" id="period-start" onchange="onPeriodChange()">
@@ -749,9 +741,9 @@ input[type="date"]:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(96,1
             <button class="btn btn-primary" style="flex:1" onclick="setPeriod()">設定期間</button>
             <button class="btn" onclick="clearPeriod()">清除</button>
           </div>
-          <div id="export-area" style="display:none;margin-top:14px;padding-top:14px;border-top:1px solid var(--border)">
-            <div style="font-size:12px;color:var(--text2);margin-bottom:10px" id="export-hint"></div>
-            <button class="btn btn-success btn-full" style="margin-bottom:8px" onclick="exportReport()">📄 匯出績效報告 CSV</button>
+          <div id="export-area" style="display:none;margin-top:18px;padding-top:18px;border-top:1px solid var(--border)">
+            <div style="font-size:14px;color:var(--text2);margin-bottom:12px" id="export-hint"></div>
+            <button class="btn btn-success btn-full" style="margin-bottom:10px" onclick="exportReport()">📄 匯出績效報告 CSV</button>
             <button class="btn btn-danger btn-full" id="end-period-btn" style="display:none" onclick="endPeriodAndClear()">⏹ 結束期間並清除所有紀錄</button>
           </div>
         </div>
@@ -791,7 +783,7 @@ input[type="date"]:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(96,1
           <div class="card">
             <div class="card-header"><span class="card-title" style="color:var(--red)">重置比賽</span></div>
             <div class="card-body">
-              <p style="font-size:12px;color:var(--text2);margin-bottom:12px">將所有持倉、訂單與資金歸零，重新開始一場新的模擬賽。</p>
+              <p style="font-size:14px;color:var(--text2);margin-bottom:16px">將所有庫存、訂單與資金歸零，重新開始一場新的模擬賽。</p>
               <button class="btn btn-danger btn-full" onclick="resetAll()">⚠ 全部重置</button>
             </div>
           </div>
@@ -814,7 +806,7 @@ input[type="date"]:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(96,1
         <div class="chart-cur-price" id="chart-cur-price">—</div>
         <div class="chart-cur-chg" id="chart-cur-chg">—</div>
       </div>
-      <button class="modal-close" style="margin-left:12px" onclick="closeChartModal()">✕</button>
+      <button class="modal-close" style="margin-left:16px" onclick="closeChartModal()">✕</button>
     </div>
     <div class="tf-bar">
       <div class="tf-btn active" id="tf-1W" onclick="setTf('1W')">1W</div>
@@ -825,9 +817,9 @@ input[type="date"]:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(96,1
       <div class="tf-btn" id="tf-3Y" onclick="setTf('3Y')">3Y</div>
     </div>
     <div id="chart-container" style="position:relative">
-      <div id="chart-loading" style="display:none;position:absolute;inset:0;background:rgba(18,21,28,.85);z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px">
-        <div style="width:28px;height:28px;border:2px solid var(--border2);border-top-color:var(--blue);border-radius:50%;animation:spin .7s linear infinite"></div>
-        <div style="font-size:12px;color:var(--text2)">載入中...</div>
+      <div id="chart-loading" style="display:none;position:absolute;inset:0;background:rgba(18,21,28,.85);z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px">
+        <div style="width:36px;height:36px;border:3px solid var(--border2);border-top-color:var(--blue);border-radius:50%;animation:spin .7s linear infinite"></div>
+        <div style="font-size:14px;color:var(--text2)">載入中...</div>
       </div>
     </div>
     <div class="chart-modal-footer">
@@ -879,29 +871,29 @@ input[type="date"]:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(96,1
       <div class="sc-question">
         <div class="sc-q-header">
           <div class="sc-q-num">4</div>
-          <div class="sc-q-text">倉位合理性：此筆佔組合比例是否在風控上限內？</div>
+          <div class="sc-q-text">部位合理性：此筆佔總資金比例是否在風控上限內？</div>
         </div>
-        <div class="sc-input"><input type="text" id="sc4" placeholder="例：佔總資產 15%，未超 30% 上限..."></div>
+        <div class="sc-input"><input type="text" id="sc4" placeholder="例：佔總資金 15%，未超 30% 上限..."></div>
         <div class="sc-scores" id="scores-4"></div>
       </div>
 
       <div class="sc-question">
         <div class="sc-q-header">
           <div class="sc-q-num">5</div>
-          <div class="sc-q-text">目標報酬：預計持倉多久？目標獲利幅度？</div>
+          <div class="sc-q-text">目標報酬：預計持有多久？目標獲利幅度？</div>
         </div>
-        <div class="sc-input"><input type="text" id="sc5" placeholder="例：持倉 2 週，目標 +8%..."></div>
+        <div class="sc-input"><input type="text" id="sc5" placeholder="例：預計持有 2 週，目標 +8%..."></div>
         <div class="sc-scores" id="scores-5"></div>
       </div>
 
       <div class="sc-total-row">
         <div>
           <div class="sc-total-label">計分卡總分</div>
-          <div id="sc-level-badge" class="badge badge-pending" style="margin-top:4px">尚未評分</div>
+          <div id="sc-level-badge" class="badge badge-pending" style="margin-top:6px">尚未評分</div>
         </div>
         <div style="text-align:right">
           <span class="sc-total-val" id="sc-total">0</span>
-          <span style="color:var(--text3);font-family:var(--mono);font-size:14px"> / 25</span>
+          <span style="color:var(--text3);font-family:var(--mono);font-size:16px"> / 25</span>
         </div>
       </div>
     </div>
@@ -923,7 +915,7 @@ input[type="date"]:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(96,1
     </div>
     <div class="modal-body" id="review-content"></div>
     <div class="modal-footer">
-      <div class="form-row" style="margin-bottom:10px">
+      <div class="form-row" style="margin-bottom:12px">
         <input type="text" id="review-comment" placeholder="風控意見（可選填）">
       </div>
       <div class="btn-row">
@@ -946,14 +938,14 @@ const db = supabase.createClient(supabaseUrl, supabaseKey);
 const INITIAL         = 200_000_000;  // 2億
 const RULES = {
   MAX_SINGLE_COST:  40_000_000,   // 單一標的上限 4,000萬
-  MIN_HOLDINGS:     20_000_000,   // 最低持股成本 2,000萬
+  MIN_HOLDINGS:     20_000_000,   // 最低庫存成本 2,000萬
   LOSS_WARN:        10_000_000,   // 累計虧損警戒線 1,000萬 → 停損出清+停止交易
   LOSS_STOP:        20_000_000,   // 累計虧損停損線 2,000萬 → 須於下一交易日停損
   POS_LOSS_PCT:     0.30,         // 單一標的未實現虧損 30% 須強制出清
 };
 const state = {
-  group: 'etf',           // current active group for trade tab
-  histGroup: 'etf',       // current active group for history tab
+  group: 'etf',           
+  histGroup: 'etf',       
   currentDir: 'buy',
   securities: {},
   orders: [],
@@ -1046,7 +1038,7 @@ function setupRealtime() {
     .on('postgres_changes', { event: '*', schema: 'public', table: 'orders' }, payload => {
       const o = payload.new;
       if (payload.eventType === 'INSERT') {
-        if (state.orders.find(x => x.id === o.id)) return; // already loaded from DB
+        if (state.orders.find(x => x.id === o.id)) return; 
         const order = {
           id: o.id, time: o.time, symbol: o.symbol, name: o.name,
           qty: +o.qty, side: o.side, price: +o.price, amount: +o.amount,
@@ -1115,7 +1107,7 @@ function renderTickers() {
         <div class="ticker-price" style="color:${clr}">${s.price.toFixed(s.price < 100 ? 2 : 0)}</div>
         <div class="ticker-chg" style="color:${clr}">${sign} ${Math.abs(chgRate).toFixed(2)}%</div>
       </div>
-      <div style="color:var(--text3);font-size:18px;padding-left:6px">›</div>
+      <div style="color:var(--text3);font-size:22px;padding-left:8px">›</div>
     </div>`;
   }
   qs('ticker-list').innerHTML = html || '<div class="empty-state">無商品資料</div>';
@@ -1360,15 +1352,15 @@ function openReview(id) {
   if (!o) return;
   state.reviewId = id;
   const sc = o.scorecard;
-  const qLabels = ['技術面訊號','基本面依據','停損設定','倉位合理性','目標報酬'];
+  const qLabels = ['技術面訊號','基本面依據','停損設定','部位合理性','目標報酬'];
   let html = `
-    <div style="background:var(--bg3);border-radius:8px;padding:12px;margin-bottom:14px;display:flex;flex-wrap:wrap;gap:10px">
+    <div style="background:var(--bg3);border-radius:8px;padding:16px;margin-bottom:18px;display:flex;flex-wrap:wrap;gap:12px">
       <div class="sc-sum-item"><div class="sc-sum-label">商品</div><div class="sc-sum-val">${o.symbol.replace('.TW','')} ${o.name}</div></div>
       <div class="sc-sum-item"><div class="sc-sum-label">方向</div><div class="sc-sum-val" style="color:${o.side==='buy'?'var(--green)':'var(--red)'}">${o.side==='buy'?'買入':'賣出'}</div></div>
       <div class="sc-sum-item"><div class="sc-sum-label">數量</div><div class="sc-sum-val">${o.qty}</div></div>
       <div class="sc-sum-item"><div class="sc-sum-label">金額</div><div class="sc-sum-val">${money(o.amount)}</div></div>
     </div>
-    <div style="margin-bottom:12px">`;
+    <div style="margin-bottom:16px">`;
   for (let i = 1; i <= 5; i++) {
     const v = sc.scores[i] || 0;
     const clr = v >= 4 ? 'var(--green)' : v >= 3 ? 'var(--blue)' : v >= 2 ? 'var(--amber)' : 'var(--red)';
@@ -1378,13 +1370,13 @@ function openReview(id) {
         <div class="review-sc-q">${qLabels[i-1]}</div>
         <div class="review-sc-reason">${sc.reasons[i]||'（未填寫）'}</div>
       </div>
-      <div style="font-family:var(--mono);font-size:14px;font-weight:600;color:${clr}">${v}/5</div>
+      <div style="font-family:var(--mono);font-size:16px;font-weight:600;color:${clr}">${v}/5</div>
     </div>`;
   }
   html += `</div>
-    <div style="background:var(--bg3);border-radius:8px;padding:12px;display:flex;justify-content:space-between;align-items:center">
-      <span style="color:var(--text2);font-size:13px">計分卡總分</span>
-      <span style="font-family:var(--mono);font-size:22px;font-weight:700;color:${sc.total>=16?'var(--green)':sc.total>=10?'var(--blue)':'var(--red)'}">${sc.total} <span style="font-size:14px;color:var(--text3)">/ 25</span></span>
+    <div style="background:var(--bg3);border-radius:8px;padding:16px;display:flex;justify-content:space-between;align-items:center">
+      <span style="color:var(--text2);font-size:15px">計分卡總分</span>
+      <span style="font-family:var(--mono);font-size:26px;font-weight:700;color:${sc.total>=16?'var(--green)':sc.total>=10?'var(--blue)':'var(--red)'}">${sc.total} <span style="font-size:16px;color:var(--text3)">/ 25</span></span>
     </div>`;
   qs('review-content').innerHTML = html;
   qs('review-comment').value = '';
@@ -1482,8 +1474,8 @@ function getViolations() {
       violations.push({
         grp, sym: null, severity: 'danger', type: 'loss_stop',
         title: `${g.name}：累計虧損超過 2,000萬`,
-        desc: `累計虧損 ${money(cumLoss)}，須於下一個交易日停損。中後台應執行整組平倉。`,
-        action: `riskCloseGroup('${grp}')`, actionLabel: '執行整組平倉'
+        desc: `累計虧損 ${money(cumLoss)}，須於下一個交易日停損。中後台應執行整組出清。`,
+        action: `riskCloseGroup('${grp}')`, actionLabel: '執行整組出清'
       });
     } else if (cumLoss >= RULES.LOSS_WARN) {
       violations.push({
@@ -1501,7 +1493,7 @@ function getViolations() {
           grp, sym: pos.symbol, severity: 'danger', type: 'max_cost',
           title: `${g.name} / ${pos.symbol.replace('.TW','')}：單一標的成本超過 4,000萬`,
           desc: `持股成本 ${money(cost)}，超過上限 ${money(RULES.MAX_SINGLE_COST)}，須減碼至限額以內。`,
-          action: `riskPartialClose('${grp}','${pos.symbol}',${pos.qty})`, actionLabel: '部分平倉'
+          action: `riskPartialClose('${grp}','${pos.symbol}',${pos.qty})`, actionLabel: '部分賣出'
         });
       }
 
@@ -1525,7 +1517,7 @@ function getViolations() {
         violations.push({
           grp, sym: null, severity: 'warn', type: 'min_holdings',
           title: `${g.name}：持股成本低於最低限制 2,000萬`,
-          desc: `目前持股成本合計 ${money(totalCost)}，低於最低限制 ${money(RULES.MIN_HOLDINGS)}，須增加持倉。`,
+          desc: `目前持股成本合計 ${money(totalCost)}，低於最低限制 ${money(RULES.MIN_HOLDINGS)}，須增加庫存。`,
           action: null, actionLabel: null
         });
       }
@@ -1567,7 +1559,7 @@ function renderRiskPositions() {
 
     let html = '';
     if (!g.positions.length) {
-      html = '<div class="empty-state" style="padding:16px">尚無持倉</div>';
+      html = '<div class="empty-state" style="padding:20px">目前無庫存</div>';
     } else {
       html = g.positions.map(p => {
         const s = state.securities[p.symbol];
@@ -1580,18 +1572,18 @@ function renderRiskPositions() {
         return `<div class="order-item">
           <div class="order-top" style="align-items:flex-start">
             <div style="flex:1">
-              <div style="display:flex;align-items:center;gap:6px">
+              <div style="display:flex;align-items:center;gap:8px">
                 <span class="order-sym">${p.symbol.replace('.TW','')}</span>
                 <span class="badge badge-${grp}">${grp === 'etf' ? 'ETF' : '個股'}</span>
               </div>
               <div class="order-meta">${p.qty} 股 · 均價 ${p.avgPrice.toFixed(p.avgPrice<100?2:0)} · 現價 ${cur.toFixed(cur<100?2:0)}</div>
-              <div class="order-meta">倉位 ${wt}% · <span style="color:${cl}">${pnl>=0?'+':''}${Math.round(pnl).toLocaleString()} (${pct(pnlPct)})</span></div>
+              <div class="order-meta">庫存佔比 ${wt}% · <span style="color:${cl}">${pnl>=0?'+':''}${Math.round(pnl).toLocaleString()} (${pct(pnlPct)})</span></div>
             </div>
             <div style="text-align:right">
               <div class="order-amount" style="color:${cl}">${money(mv)}</div>
-              <div style="display:flex;gap:5px;margin-top:6px">
+              <div style="display:flex;gap:8px;margin-top:10px">
                 <button class="btn btn-sm" onclick="riskPartialClose('${grp}','${p.symbol}',${p.qty})">部分</button>
-                <button class="btn btn-sm btn-danger" onclick="riskCloseAll('${grp}','${p.symbol}',${p.qty})">全倉</button>
+                <button class="btn btn-sm btn-danger" onclick="riskCloseAll('${grp}','${p.symbol}',${p.qty})">全數</button>
               </div>
             </div>
           </div>
@@ -1600,8 +1592,8 @@ function renderRiskPositions() {
     }
 
     html += `
-      <div style="padding:10px 14px;border-top:1px solid var(--border);display:flex;justify-content:flex-end">
-        <button class="btn btn-sm btn-danger" onclick="riskCloseGroup('${grp}')">⚠ 整組全部平倉</button>
+      <div style="padding:14px 18px;border-top:1px solid var(--border);display:flex;justify-content:flex-end">
+        <button class="btn btn-sm btn-danger" onclick="riskCloseGroup('${grp}')">⚠ 整組全部出清</button>
       </div>`;
 
     el.innerHTML = html;
@@ -1609,24 +1601,24 @@ function renderRiskPositions() {
 }
 
 function riskPartialClose(grp, sym, maxQty) {
-  const qty = parseInt(prompt(`${sym.replace('.TW','')} 持有 ${maxQty} 股，請輸入平倉數量：`, maxQty));
+  const qty = parseInt(prompt(`${sym.replace('.TW','')} 庫存 ${maxQty} 股，請輸入賣出數量：`, maxQty));
   if (!qty || qty < 1 || qty > maxQty) { toast('數量無效', 'warn'); return; }
-  riskExecuteClose(grp, sym, qty, `中後台部分平倉 × ${qty}`);
+  riskExecuteClose(grp, sym, qty, `中後台強制部分賣出 × ${qty}`);
 }
 
 async function riskCloseAll(grp, sym, qty) {
-  if (!confirm(`確定平倉 ${sym.replace('.TW','')} 全部 ${qty} 股？\n此操作由中後台直接執行，不經前台審核。`)) return;
-  await riskExecuteClose(grp, sym, qty, '中後台全部平倉');
+  if (!confirm(`確定出清 ${sym.replace('.TW','')} 全部 ${qty} 股？\n此操作由中後台直接執行，不經前台審核。`)) return;
+  await riskExecuteClose(grp, sym, qty, '中後台強制全部出清');
 }
 
 async function riskCloseGroup(grp) {
   const g = state.groups[grp];
-  if (!g.positions.length) { toast('此組別無持倉', 'info'); return; }
-  if (!confirm(`確定將 ${g.name} 所有持倉全部平倉？\n此操作不可復原。`)) return;
+  if (!g.positions.length) { toast('此組別無庫存', 'info'); return; }
+  if (!confirm(`確定將 ${g.name} 所有庫存全部出清？\n此操作不可復原。`)) return;
   for (const p of [...g.positions]) {
-    await riskExecuteClose(grp, p.symbol, p.qty, '中後台整組平倉', true);
+    await riskExecuteClose(grp, p.symbol, p.qty, '中後台整組強制出清', true);
   }
-  toast(`${g.name} 整組平倉完成`, 'warn');
+  toast(`${g.name} 整組出清完成`, 'warn');
   updateAllMetrics();
 }
 
@@ -1642,15 +1634,15 @@ async function riskExecuteClose(grp, sym, qty, comment, silent = false) {
     settlement_price: null,
     scorecard: {
       scores: {1:3,2:3,3:5,4:5,5:3}, total: 19,
-      reasons: {1:'中後台平倉',2:'中後台平倉',3:'風控指令',4:'清空倉位',5:'執行平倉'}
+      reasons: {1:'中後台處置',2:'中後台處置',3:'風控處置指令',4:'清空庫存',5:'強制出清'}
     }
   };
   const { error } = await db.from('orders').insert([order]);
-  if (error) { toast('平倉送單失敗：' + error.message, 'danger'); return; }
+  if (error) { toast('處置送單失敗：' + error.message, 'danger'); return; }
 
   state.orders.push(order);
   state.approvedPending.push(order);
-  if (!silent) toast(`平倉指令已送出，結算日：${settlDate}`, 'warn');
+  if (!silent) toast(`強制出清指令已送出，結算日：${settlDate}`, 'warn');
 }
 
 function prefillClose(sym, maxQty) {
@@ -1674,23 +1666,23 @@ async function fullClose(sym, qty) {
   if (g.frozen) { toast('此組別已凍結，無法下單', 'danger'); return; }
   const s = state.securities[sym];
   if (!s) return;
-  if (!confirm(`確定全部平倉 ${sym.replace('.TW','')} × ${qty} 股？\n將以 ${getSettlementDate()} 收盤價結算。`)) return;
+  if (!confirm(`確定全部出清 ${sym.replace('.TW','')} × ${qty} 股？\n將以 ${getSettlementDate()} 收盤價結算。`)) return;
 
   const settlDate = getSettlementDate();
   const order = {
     id: uid(), time: nowTime(), symbol: sym, name: s.name,
     qty, side: 'sell', price: s.price, amount: s.price * qty,
-    grp, status: 'pending', comment: '全部平倉',
+    grp, status: 'pending', comment: '全部出清',
     settlement_date: settlDate,
     settlement_price: null,
     scorecard: {
       scores: {1:3,2:3,3:5,4:5,5:3}, total: 19,
-      reasons: {1:'平倉指令',2:'平倉指令',3:'平倉停利停損',4:'清空倉位',5:'執行平倉'}
+      reasons: {1:'賣出指令',2:'賣出指令',3:'停利停損',4:'清空庫存',5:'執行賣出'}
     }
   };
   const { error } = await db.from('orders').insert([order]);
-  if (error) toast('平倉送單失敗：' + error.message, 'danger');
-  else toast(`全部平倉指令已送審，結算日：${settlDate}`, 'warn');
+  if (error) toast('賣出送單失敗：' + error.message, 'danger');
+  else toast(`全部出清指令已送審，結算日：${settlDate}`, 'warn');
 }
 
 // ========== METRICS ==========
@@ -1789,7 +1781,7 @@ function renderPositions() {
   const nav = calcNAV(grp);
   setText('pos-count', g.positions.length + ' 筆');
   if (!g.positions.length) {
-    qs('positions-list').innerHTML = '<div class="empty-state">尚無持倉</div>';
+    qs('positions-list').innerHTML = '<div class="empty-state">目前無庫存</div>';
     return;
   }
   qs('positions-list').innerHTML = g.positions.map(p => {
@@ -1803,21 +1795,21 @@ function renderPositions() {
     return `<div class="pos-item">
       <div class="pos-top">
         <div>
-          <div class="pos-sym">${p.symbol.replace('.TW','')} <span style="font-size:12px;color:var(--text2);font-family:var(--sans)">${s?s.name:''}</span></div>
-          <div style="font-size:11px;color:var(--text3);margin-top:2px">持有 ${p.qty} 股 · 均價 ${p.avgPrice.toFixed(p.avgPrice<100?2:0)}</div>
+          <div class="pos-sym">${p.symbol.replace('.TW','')} <span style="font-size:14px;color:var(--text2);font-family:var(--sans)">${s?s.name:''}</span></div>
+          <div style="font-size:14px;color:var(--text3);margin-top:4px">持有 ${p.qty} 股 · 均價 ${p.avgPrice.toFixed(p.avgPrice<100?2:0)}</div>
         </div>
         <div class="pos-pnl" style="color:${cl}">
           ${pnl>=0?'+':''}${pnl.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g,',')}
-          <div style="font-size:11px">${pct(pnlPct)}</div>
+          <div style="font-size:13px">${pct(pnlPct)}</div>
         </div>
       </div>
       <div class="pos-detail">
         <div class="pos-detail-item">現價 <span>${cur.toFixed(cur<100?2:0)}</span></div>
-        <div class="pos-detail-item">倉位佔比 <span>${wt}%</span></div>
+        <div class="pos-detail-item">庫存佔比 <span>${wt}%</span></div>
       </div>
-      <div style="display:flex;gap:6px;margin-top:8px">
-        <button class="btn btn-sm" style="flex:1" onclick="prefillClose('${p.symbol}',${p.qty})">部分平倉</button>
-        <button class="btn btn-sm btn-danger" style="flex:1" onclick="fullClose('${p.symbol}',${p.qty})">全部平倉</button>
+      <div style="display:flex;gap:10px;margin-top:12px">
+        <button class="btn btn-sm" style="flex:1" onclick="prefillClose('${p.symbol}',${p.qty})">部分賣出</button>
+        <button class="btn btn-sm btn-danger" style="flex:1" onclick="fullClose('${p.symbol}',${p.qty})">全部出清</button>
       </div>
     </div>`;
   }).join('');
@@ -1840,7 +1832,7 @@ function renderPendingList() {
       return `<div class="order-item">
         <div class="order-top">
           <div>
-            <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
               <span class="order-sym">${o.symbol.replace('.TW','')}</span>
               <span class="badge badge-${o.side}">${o.side==='buy'?'買':'賣'}</span>
               <span class="badge badge-${o.group}">${o.group==='etf'?'ETF':'個股'}</span>
@@ -1850,7 +1842,7 @@ function renderPendingList() {
           </div>
           <div>
             <div class="order-amount">${money(o.amount)}</div>
-            <button class="btn btn-sm btn-primary" style="margin-top:6px;width:100%" onclick="openReview('${o.id}')">審核</button>
+            <button class="btn btn-sm btn-primary" style="margin-top:8px;width:100%" onclick="openReview('${o.id}')">審核</button>
           </div>
         </div>
       </div>`;
@@ -1858,14 +1850,14 @@ function renderPendingList() {
   }
 
   if (state.approvedPending.length) {
-    html += `<div class="settle-section-hdr" style="margin-top:4px">已核准 — 等待收盤結算</div>`;
+    html += `<div class="settle-section-hdr" style="margin-top:6px">已核准 — 等待收盤結算</div>`;
     html += state.approvedPending.map(o => {
       const sd = o.settlement_date || '—';
       const locked = isAfter && sd <= today;
       return `<div class="order-item">
         <div class="order-top">
           <div>
-            <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
               <span class="order-sym">${o.symbol.replace('.TW','')}</span>
               <span class="badge badge-${o.side}">${o.side==='buy'?'買':'賣'}</span>
               <span class="badge badge-approved">已核准</span>
@@ -1876,7 +1868,7 @@ function renderPendingList() {
           </div>
           <div>
             <div class="order-amount">${money(o.amount)}</div>
-            ${!locked ? `<button class="btn btn-sm btn-danger" style="margin-top:6px;width:100%" onclick="cancelApproved('${o.id}')">取消</button>` : ''}
+            ${!locked ? `<button class="btn btn-sm btn-danger" style="margin-top:8px;width:100%" onclick="cancelApproved('${o.id}')">取消</button>` : ''}
           </div>
         </div>
       </div>`;
@@ -1937,10 +1929,10 @@ function renderNavChart() {
     ]},
     options: {
       responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { display: true, labels: { color:'#8892a4', font:{size:11}, boxWidth:12 } } },
+      plugins: { legend: { display: true, labels: { color:'#8892a4', font:{size:13}, boxWidth:14 } } },
       scales: {
-        x: { grid:{color:'rgba(255,255,255,.04)'}, ticks:{color:'#4a5568',font:{size:10}} },
-        y: { grid:{color:'rgba(255,255,255,.04)'}, ticks:{color:'#4a5568',font:{size:10}, callback: v=>'$'+Math.round(v/1000000)+'M'} }
+        x: { grid:{color:'rgba(255,255,255,.04)'}, ticks:{color:'#4a5568',font:{size:12}} },
+        y: { grid:{color:'rgba(255,255,255,.04)'}, ticks:{color:'#4a5568',font:{size:12}, callback: v=>'$'+Math.round(v/1000000)+'M'} }
       }
     }
   });
@@ -1975,13 +1967,13 @@ function renderHistory() {
     <div class="order-item">
       <div class="order-top">
         <div>
-          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
             <span class="order-sym">${o.symbol.replace('.TW','')}</span>
             <span class="badge badge-${o.side}">${o.side==='buy'?'買入':'賣出'}</span>
             <span class="badge ${o.status==='approved'?'badge-approved':o.status==='executed'?'badge-executed':o.status==='rejected'?'badge-rejected':'badge-pending'}">${{pending:'待審',approved:'待結算',executed:'成交',rejected:'駁回'}[o.status]||o.status}</span>
           </div>
           <div class="order-meta">${o.qty} 股 · 計分 ${o.scorecard.total}/25 · ${o.time}</div>
-          ${o.comment ? `<div style="font-size:11px;color:var(--text3);margin-top:2px">💬 ${o.comment}</div>` : ''}
+          ${o.comment ? `<div style="font-size:13px;color:var(--text3);margin-top:4px">💬 ${o.comment}</div>` : ''}
         </div>
         <div class="order-amount">${money(o.amount)}</div>
       </div>
@@ -2129,7 +2121,6 @@ async function buildChart(sym, tf) {
   lwChart.timeScale().fitContent();
   showChartLoading(false);
 
-  // 【RWD 升級】讓 Lightweight Charts 自動響應尺寸變更
   if (window.chartResizeObserver) window.chartResizeObserver.disconnect();
   window.chartResizeObserver = new ResizeObserver(entries => {
     if (!lwChart) return;
@@ -2305,11 +2296,11 @@ function exportReport() {
   if (!sorted.length) rows.push(['（無成交紀錄）']);
   rows.push([]);
 
-  rows.push(['=== 三、期末持倉（參考） ===']);
-  rows.push(['組別','商品代號','商品名稱','持有數量','成本均價','現值參考','未實現損益']);
+  rows.push(['=== 三、期末庫存（參考） ===']);
+  rows.push(['組別','商品代號','商品名稱','持有股數','成本均價','現值參考','未實現損益']);
   for (const grp of ['etf', 'stock']) {
     const g = state.groups[grp];
-    if (!g.positions.length) { rows.push([g.name, '（無持倉）']); continue; }
+    if (!g.positions.length) { rows.push([g.name, '（目前無庫存）']); continue; }
     for (const p of g.positions) {
       const s = state.securities[p.symbol];
       const cur = s ? s.price : p.avgPrice;
