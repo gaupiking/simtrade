@@ -38,31 +38,33 @@
   --radius-sm: 8px;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html,body{height:100%;overflow:hidden}
-/* 將基礎字體從 14px 放大到 16px */
+/* 嚴格限制超出寬度，解決左右晃動問題 */
+html,body{height:100%;max-width:100vw;overflow-x:hidden;}
 body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:16px;line-height:1.5}
 
 /* ── Layout ── */
-#app{display:flex;flex-direction:column;height:100vh;height:100dvh}
+#app{display:flex;flex-direction:column;height:100vh;height:100dvh;width:100%;max-width:100%}
 
 /* ── Header ── */
 #header{
   background:var(--bg2);
   border-bottom:1px solid var(--border);
-  padding:0 18px;
-  height:60px; /* 加高 Header */
+  padding:0 14px;
+  height:60px; 
   display:flex;align-items:center;justify-content:space-between;
   flex-shrink:0;
   position:relative;z-index:50;
+  width: 100%;
 }
-#header h1{font-family:var(--mono);font-size:18px;font-weight:600;letter-spacing:.5px} /* 標題放大 */
+#header h1{font-family:var(--mono);font-size:18px;font-weight:600;letter-spacing:.5px;white-space:nowrap}
 #header h1 span{color:var(--teal)}
-.hdr-right{display:flex;align-items:center;gap:10px}
+.hdr-right{display:flex;align-items:center;gap:6px;min-width:0}
 #price-pill{
   display:flex;align-items:center;gap:6px;
   background:var(--bg3);border:1px solid var(--border2);
-  border-radius:20px;padding:6px 12px;
-  font-family:var(--mono);font-size:13px;color:var(--text3); /* 放大報價標籤 */
+  border-radius:20px;padding:6px 10px;
+  font-family:var(--mono);font-size:12px;color:var(--text3);
+  white-space:nowrap;
 }
 #price-dot{width:8px;height:8px;border-radius:50%;background:var(--text3);flex-shrink:0}
 #price-dot.live{background:var(--green);animation:pulse 2s infinite}
@@ -74,51 +76,63 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:16
   border-bottom:1px solid var(--border);
   display:flex;
   flex-shrink:0;
+  width: 100%;
 }
 .tb{
   flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:12px 4px 10px;gap:6px; /* 增加觸控高度 */
+  padding:12px 2px 10px;gap:4px;
   font-size:13px;color:var(--text3);cursor:pointer;
   border-bottom:3px solid transparent;
   transition:all .15s;
+  white-space: nowrap;
 }
-.tb .tb-icon{font-size:22px} /* 放大 Icon */
+.tb .tb-icon{font-size:20px}
 .tb.active{color:var(--text);border-bottom-color:var(--blue)}
 .tb.active.t-trade{border-bottom-color:var(--teal)}
 .tb.active.t-risk{border-bottom-color:var(--amber)}
 .tb.active.t-history{border-bottom-color:var(--blue)}
 
 /* ── Content ── */
-#content{flex:1;overflow-y:auto;overscroll-behavior:contain}
-.panel{display:none;padding:18px;padding-bottom:32px}
+#content{flex:1;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;width:100%}
+.panel{display:none;padding:16px;padding-bottom:32px;width:100%}
 .panel.active{display:block}
 
 /* ── Cards ── */
-.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:16px}
-.card-header{padding:16px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
-.card-title{font-size:14px;font-weight:700;letter-spacing:.8px;color:var(--text2);text-transform:uppercase}
-.card-body{padding:18px}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:16px;width:100%}
+.card-header{padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.card-title{font-size:14px;font-weight:700;letter-spacing:.5px;color:var(--text2);text-transform:uppercase;white-space:nowrap}
+.card-body{padding:16px}
 
 /* ── Metrics ── */
 .metric-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
-.metric{background:var(--bg3);border-radius:var(--radius-sm);padding:16px}
-.metric-label{font-size:13px;color:var(--text3);margin-bottom:4px}
-.metric-val{font-family:var(--mono);font-size:24px;font-weight:600} /* 數字顯著放大 */
+.metric{background:var(--bg3);border-radius:var(--radius-sm);padding:14px;min-width:0}
+.metric-label{font-size:13px;color:var(--text3);margin-bottom:4px;white-space:nowrap}
+.metric-val{font-family:var(--mono);font-size:22px;font-weight:600;word-break:break-all}
 .metric-val.up{color:var(--green)}
 .metric-val.down{color:var(--red)}
 .metric-val.warn{color:var(--amber)}
 .metric-val.neutral{color:var(--text)}
-.metric-sub{font-size:13px;color:var(--text3);margin-top:4px}
+.metric-sub{font-size:13px;color:var(--text3);margin-top:4px;white-space:nowrap}
 
-/* ── Base RWD Grid System (Mobile First) ── */
-.rwd-grid { display: flex; flex-direction: column; gap: 16px; margin-bottom: 16px; }
-.rwd-col { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+/* 特製化：中後台風險指標，防止手機 3 欄破版 */
+.risk-stats {
+  display: grid; 
+  grid-template-columns: 1fr 1fr; /* 手機上改為 2 欄 */
+  gap: 10px; 
+  margin-top: 8px;
+}
+/* 讓第三個（夏普值）在手機上橫跨兩欄，空間更充裕 */
+.risk-stats > .metric:nth-child(3) { grid-column: 1 / -1; }
+
+/* ── Base RWD Grid System ── */
+.rwd-grid { display: flex; flex-direction: column; gap: 16px; margin-bottom: 16px; width: 100%; }
+.rwd-col { display: flex; flex-direction: column; gap: 16px; min-width: 0; width: 100%; }
 .rwd-grid .card, .rwd-grid .metric-row { margin-bottom: 0; } 
 
 /* ── Ticker list ── */
 .ticker-section-label{
   font-size:12px;font-weight:700;letter-spacing:1px;
-  padding:10px 18px 8px;
+  padding:10px 16px 8px;
   color:var(--text3);text-transform:uppercase;
   border-bottom:1px solid var(--border);
 }
@@ -126,31 +140,32 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:16
 .ticker-section-label.stk-lbl{color:var(--amber)}
 .ticker-row{
   display:flex;align-items:center;gap:12px;
-  padding:14px 18px;border-bottom:1px solid var(--border);
+  padding:14px 16px;border-bottom:1px solid var(--border);
   cursor:pointer;transition:background .1s;
 }
 .ticker-row:last-child{border-bottom:none}
 .ticker-row:active{background:var(--bg3)}
-.ticker-left{flex:1;min-width:0}
+.ticker-left{flex:1;min-width:0} /* 允許內部文字截斷 */
 .ticker-sym{font-family:var(--mono);font-size:17px;font-weight:600}
-.ticker-name{font-size:14px;color:var(--text2);margin-top:2px}
-.ticker-right{text-align:right}
-.ticker-price{font-family:var(--mono);font-size:20px;font-weight:600}
-.ticker-chg{font-family:var(--mono);font-size:14px;margin-top:2px}
+.ticker-name{font-size:14px;color:var(--text2);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ticker-right{text-align:right;flex-shrink:0}
+.ticker-price{font-family:var(--mono);font-size:18px;font-weight:600}
+.ticker-chg{font-family:var(--mono);font-size:13px;margin-top:2px}
+
 @keyframes flashUp{0%{background:rgba(52,211,153,.25)}100%{background:transparent}}
 @keyframes flashDown{0%{background:rgba(248,113,113,.25)}100%{background:transparent}}
 .flash-up{animation:flashUp .6s ease}
 .flash-down{animation:flashDown .6s ease}
 
 /* ── Forms ── */
-.form-row{margin-bottom:16px}
+.form-row{margin-bottom:16px; width:100%}
 .form-label{font-size:14px;font-weight:600;color:var(--text2);display:block;margin-bottom:8px;letter-spacing:.3px}
-.form-hint{font-size:13px;color:var(--text3);margin-top:6px}
 input,select{
   width:100%;background:var(--bg3);border:1px solid var(--border2);
   color:var(--text);border-radius:var(--radius-sm);
-  padding:14px 16px;font-family:var(--sans);font-size:16px; /* 放大表單字體與Padding */
+  padding:14px 16px;font-family:var(--sans);font-size:16px;
   -webkit-appearance:none;appearance:none;outline:none;
+  max-width: 100%; box-sizing: border-box;
 }
 input:focus,select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(96,165,250,.12)}
 select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='10' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238892a4' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:40px}
@@ -158,7 +173,7 @@ select option{background:var(--bg3)}
 input[readonly]{background:var(--bg4);color:var(--text2);cursor:default}
 
 /* ── Buttons ── */
-button{cursor:pointer;border:none;border-radius:var(--radius-sm);font-family:var(--sans);font-size:16px;font-weight:500;padding:14px 20px;transition:all .15s;-webkit-appearance:none}
+button{cursor:pointer;border:none;border-radius:var(--radius-sm);font-family:var(--sans);font-size:16px;font-weight:500;padding:14px 18px;transition:all .15s;-webkit-appearance:none}
 .btn{background:var(--bg3);border:1px solid var(--border2);color:var(--text)}
 .btn:active{opacity:.75}
 .btn-primary{background:var(--blue);color:#0a0c10}
@@ -167,18 +182,18 @@ button{cursor:pointer;border:none;border-radius:var(--radius-sm);font-family:var
 .btn-danger{background:var(--red);color:#0a0c10}
 .btn-warn{background:var(--amber);color:#0a0c10}
 .btn-full{width:100%;padding:16px}
-.btn-sm{padding:10px 14px;font-size:14px}
-.btn-row{display:flex;gap:10px}
-.btn-row button{flex:1}
+.btn-sm{padding:8px 12px;font-size:13px}
+.btn-row{display:flex;gap:10px;flex-wrap:wrap}
+.btn-row button{flex:1;min-width:120px} /* 防止按鈕被壓太扁 */
 
 /* ── Direction toggle ── */
 .dir-toggle{display:flex;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius-sm);overflow:hidden;margin-bottom:16px}
-.dir-btn{flex:1;padding:14px;text-align:center;font-size:16px;font-weight:600;cursor:pointer;transition:all .15s;color:var(--text3)}
+.dir-btn{flex:1;padding:12px;text-align:center;font-size:15px;font-weight:600;cursor:pointer;transition:all .15s;color:var(--text3)}
 .dir-btn.active-buy{background:var(--green-bg);color:var(--green);border:1px solid rgba(52,211,153,.3)}
 .dir-btn.active-sell{background:var(--red-bg);color:var(--red);border:1px solid rgba(248,113,113,.3)}
 
-/* ── Badges & Banners ── */
-.badge{display:inline-flex;align-items:center;padding:4px 10px;border-radius:6px;font-size:13px;font-weight:700;font-family:var(--mono)}
+/* ── Badges ── */
+.badge{display:inline-flex;align-items:center;padding:4px 8px;border-radius:6px;font-size:12px;font-weight:700;font-family:var(--mono);white-space:nowrap}
 .badge-etf{background:var(--teal-bg);color:var(--teal);border:1px solid var(--teal-bd)}
 .badge-stock{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-bd)}
 .badge-pending{background:var(--blue-bg);color:var(--blue);border:1px solid rgba(96,165,250,.25)}
@@ -191,38 +206,27 @@ button{cursor:pointer;border:none;border-radius:var(--radius-sm);font-family:var
 .rule-clock{
   display:inline-flex;align-items:center;gap:6px;
   background:var(--bg3);border:1px solid var(--border2);
-  border-radius:4px;padding:4px 10px;font-family:var(--mono);font-size:13px;
+  border-radius:4px;padding:4px 8px;font-family:var(--mono);font-size:12px;
 }
 .rule-clock .dot{width:8px;height:8px;border-radius:50%}
 .rule-clock.open-dot .dot{background:var(--green);animation:pulse 2s infinite}
 .rule-clock.close-dot .dot{background:var(--amber)}
 
-.violation-item{padding:14px 18px;border-bottom:1px solid var(--border);}
-.violation-item:last-child{border-bottom:none}
-.violation-title{font-size:15px;font-weight:600;margin-bottom:4px}
-.violation-title.danger{color:var(--red)}
-.violation-title.warn{color:var(--amber)}
-.violation-desc{font-size:13px;color:var(--text2);margin-bottom:10px;line-height:1.6}
-.settle-section-hdr{
-  font-size:12px;font-weight:700;letter-spacing:.8px;color:var(--text3);
-  text-transform:uppercase;padding:12px 18px 6px;
-}
+/* ── Lists & Truncation ── */
+.order-item, .pos-item { padding: 16px; border-bottom: 1px solid var(--border); }
+.order-item:last-child, .pos-item:last-child { border-bottom: none; }
+.order-top, .pos-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 10px; gap: 12px; }
 
-/* ── Lists ── */
-.order-item{padding:16px 18px;border-bottom:1px solid var(--border)}
-.order-item:last-child{border-bottom:none}
-.order-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
-.order-sym{font-family:var(--mono);font-size:17px;font-weight:600}
-.order-meta{font-size:14px;color:var(--text3);margin-top:4px}
-.order-amount{font-family:var(--mono);font-size:16px;font-weight:600;text-align:right}
+/* 讓列表左側可以縮小換行，避免推擠價格 */
+.order-top > div:first-child, .pos-top > div:first-child { flex: 1; min-width: 0; }
+.order-top > div:last-child, .pos-top > div:last-child { flex-shrink: 0; text-align: right; }
 
-.pos-item{padding:16px 18px;border-bottom:1px solid var(--border)}
-.pos-item:last-child{border-bottom:none}
-.pos-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
-.pos-sym{font-family:var(--mono);font-size:17px;font-weight:600}
-.pos-pnl{font-family:var(--mono);font-size:18px;font-weight:600;text-align:right}
+.order-sym, .pos-sym { font-family:var(--mono);font-size:16px;font-weight:600;display:inline-block;word-break:break-all; }
+.order-meta { font-size: 13px; color: var(--text3); margin-top: 4px; line-height: 1.4; }
+.order-amount, .pos-pnl { font-family:var(--mono);font-size:16px;font-weight:600; }
+
 .pos-detail{display:grid;grid-template-columns:1fr 1fr;gap:6px}
-.pos-detail-item{font-size:14px;color:var(--text3)}
+.pos-detail-item{font-size:13px;color:var(--text3)}
 .pos-detail-item span{color:var(--text2);font-family:var(--mono)}
 
 /* ── Risk bar ── */
@@ -236,12 +240,12 @@ button{cursor:pointer;border:none;border-radius:var(--radius-sm);font-family:var
 
 .freeze-banner{
   background:var(--red-bg);border:1px solid var(--red-bd);
-  border-radius:var(--radius-sm);padding:14px 18px;
+  border-radius:var(--radius-sm);padding:14px 16px;
   display:flex;align-items:center;gap:12px;margin-bottom:16px;
 }
-.freeze-icon{font-size:24px;flex-shrink:0}
+.freeze-icon{font-size:22px;flex-shrink:0}
 .freeze-text strong{color:var(--red);font-size:15px;display:block}
-.freeze-text span{font-size:14px;color:var(--text2)}
+.freeze-text span{font-size:13px;color:var(--text2)}
 
 /* ── Modals ── */
 .modal-bg{
@@ -254,34 +258,34 @@ button{cursor:pointer;border:none;border-radius:var(--radius-sm);font-family:var
 .modal{
   background:var(--bg2);border:1px solid var(--border2);
   border-radius:var(--radius) var(--radius) 0 0;
-  width:100%;max-height:92vh;
+  width:100%;max-width:100vw;max-height:92vh;
   display:flex;flex-direction:column;
   animation:slideUp .25s ease;
 }
 @keyframes slideUp{from{transform:translateY(40px);opacity:0}to{transform:translateY(0);opacity:1}}
-.modal-handle{width:42px;height:6px;background:var(--bg4);border-radius:3px;margin:12px auto 0}
-.modal-header{padding:16px 20px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
-.modal-title{font-size:17px;font-weight:600}
-.modal-close{background:var(--bg3);border:1px solid var(--border2);color:var(--text2);width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;padding:0;cursor:pointer}
-.modal-body{padding:20px;overflow-y:auto;flex:1}
-.modal-footer{padding:16px 20px;border-top:1px solid var(--border);background:var(--bg2)}
+.modal-handle{width:40px;height:6px;background:var(--bg4);border-radius:3px;margin:12px auto 0;flex-shrink:0}
+.modal-header{padding:16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.modal-title{font-size:16px;font-weight:600}
+.modal-close{background:var(--bg3);border:1px solid var(--border2);color:var(--text2);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;padding:0;cursor:pointer;flex-shrink:0}
+.modal-body{padding:16px;overflow-y:auto;overflow-x:hidden;flex:1}
+.modal-footer{padding:16px;border-top:1px solid var(--border);background:var(--bg2)}
 
 /* ── Scorecard questions ── */
-.sc-order-summary{background:var(--bg3);border-radius:var(--radius-sm);padding:16px;margin-bottom:18px;display:flex;flex-wrap:wrap;gap:12px}
+.sc-order-summary{background:var(--bg3);border-radius:var(--radius-sm);padding:14px;margin-bottom:16px;display:flex;flex-wrap:wrap;gap:10px}
 .sc-sum-item .sc-sum-label{font-size:12px;color:var(--text3)}
 .sc-sum-item .sc-sum-val{font-family:var(--mono);font-size:15px;font-weight:600}
 .sc-question{margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border)}
 .sc-question:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
 .sc-q-header{display:flex;gap:10px;margin-bottom:10px}
-.sc-q-num{width:28px;height:28px;border-radius:50%;background:var(--bg4);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:14px;color:var(--text3);flex-shrink:0}
-.sc-q-text{font-size:15px;color:var(--text);line-height:1.45;padding-top:2px}
+.sc-q-num{width:26px;height:26px;border-radius:50%;background:var(--bg4);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:13px;color:var(--text3);flex-shrink:0}
+.sc-q-text{font-size:14px;color:var(--text);line-height:1.45;padding-top:2px}
 .sc-input{margin-bottom:10px}
-.sc-scores{display:flex;gap:8px}
+.sc-scores{display:flex;gap:6px;flex-wrap:wrap} /* 防止打分圓點爆框 */
 .sc-dot{
-  flex:1;height:42px;border:1px solid var(--border2);border-radius:6px;
+  flex: 1 1 calc(20% - 6px); height:40px;border:1px solid var(--border2);border-radius:6px;
   display:flex;align-items:center;justify-content:center;
-  font-family:var(--mono);font-size:16px;font-weight:600;color:var(--text3);cursor:pointer;
-  transition:all .15s;
+  font-family:var(--mono);font-size:15px;font-weight:600;color:var(--text3);cursor:pointer;
+  transition:all .15s; min-width:40px;
 }
 .sc-dot.s1{background:rgba(248,113,113,.2);color:var(--red);border-color:var(--red-bd)}
 .sc-dot.s2{background:rgba(251,191,36,.15);color:var(--amber);border-color:var(--amber-bd)}
@@ -289,22 +293,22 @@ button{cursor:pointer;border:none;border-radius:var(--radius-sm);font-family:var
 .sc-dot.s4{background:var(--green-bg);color:var(--green);border-color:rgba(52,211,153,.3)}
 .sc-dot.s5{background:var(--teal-bg);color:var(--teal);border-color:var(--teal-bd)}
 .sc-total-row{
-  background:var(--bg3);border-radius:var(--radius-sm);padding:16px;
+  background:var(--bg3);border-radius:var(--radius-sm);padding:14px;
   display:flex;align-items:center;justify-content:space-between;margin-top:16px;
 }
-.sc-total-label{font-size:15px;color:var(--text2)}
-.sc-total-val{font-family:var(--mono);font-size:28px;font-weight:700;color:var(--blue)}
+.sc-total-label{font-size:14px;color:var(--text2)}
+.sc-total-val{font-family:var(--mono);font-size:26px;font-weight:700;color:var(--blue)}
 
 /* ── Review modal items ── */
 .review-sc-row{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);font-size:14px}
 .review-sc-row:last-child{border-bottom:none}
-.review-sc-q{flex:1;color:var(--text2)}
+.review-sc-q{flex:1;color:var(--text2);min-width:0}
 .review-sc-reason{color:var(--text3);font-size:13px;margin-top:4px}
 
 /* ── Chart & Toasts ── */
-.chart-wrap{position:relative;width:100%;height:240px;margin-top:6px} /* 圖表高度加大 */
-.toast-area{position:fixed;top:70px;left:50%;transform:translateX(-50%);width:calc(100% - 36px);max-width:440px;display:flex;flex-direction:column;gap:10px;z-index:300;pointer-events:none}
-.toast{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius-sm);padding:14px 18px;font-size:15px;box-shadow:0 8px 32px rgba(0,0,0,.5);animation:slideDown .2s ease;pointer-events:auto}
+.chart-wrap{position:relative;width:100%;height:220px;margin-top:6px} 
+.toast-area{position:fixed;top:70px;left:50%;transform:translateX(-50%);width:calc(100% - 32px);max-width:440px;display:flex;flex-direction:column;gap:10px;z-index:300;pointer-events:none}
+.toast{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius-sm);padding:14px 16px;font-size:14px;box-shadow:0 8px 32px rgba(0,0,0,.5);animation:slideDown .2s ease;pointer-events:auto;word-break:break-word}
 .toast.success{border-left:4px solid var(--green)}
 .toast.danger{border-left:4px solid var(--red)}
 .toast.warn{border-left:4px solid var(--amber)}
@@ -312,13 +316,13 @@ button{cursor:pointer;border:none;border-radius:var(--radius-sm);font-family:var
 @keyframes slideDown{from{transform:translateY(-10px);opacity:0}to{transform:translateY(0);opacity:1}}
 
 /* ── Misc ── */
-.empty-state{padding:50px 20px;text-align:center;color:var(--text3);font-size:15px}
+.empty-state{padding:40px 20px;text-align:center;color:var(--text3);font-size:14px}
 .divider{border:none;border-top:1px solid var(--border);margin:16px 0}
-.group-toggle{display:flex;gap:10px;margin-bottom:18px}
-.group-btn{flex:1;padding:12px;text-align:center;font-size:15px;font-weight:700;border-radius:var(--radius-sm);cursor:pointer;transition:all .15s;border:1px solid var(--border2);color:var(--text3);background:var(--bg3)}
+.group-toggle{display:flex;gap:10px;margin-bottom:16px}
+.group-btn{flex:1;padding:12px;text-align:center;font-size:14px;font-weight:700;border-radius:var(--radius-sm);cursor:pointer;transition:all .15s;border:1px solid var(--border2);color:var(--text3);background:var(--bg3)}
 .group-btn.etf-active{background:var(--teal-bg);color:var(--teal);border-color:var(--teal-bd)}
 .group-btn.stk-active{background:var(--amber-bg);color:var(--amber);border-color:var(--amber-bd)}
-.tag{font-size:12px;color:var(--text3);font-family:var(--mono)}
+.tag{font-size:12px;color:var(--text3);font-family:var(--mono);white-space:nowrap}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 @keyframes spin{to{transform:rotate(360deg)}}
 
@@ -337,34 +341,37 @@ button{cursor:pointer;border:none;border-radius:var(--radius-sm);font-family:var
   animation:slideUp .25s ease;
 }
 .chart-modal-header{
-  padding:16px 20px;border-bottom:1px solid var(--border);
-  display:flex;align-items:center;justify-content:space-between;
-  flex-shrink:0;
+  padding:16px;border-bottom:1px solid var(--border);
+  display:flex;align-items:flex-start;justify-content:space-between;
+  flex-shrink:0;gap:8px;
 }
-.chart-sym-info{flex:1}
-.chart-sym-name{font-family:var(--mono);font-size:18px;font-weight:700}
-.chart-sym-sub{font-size:14px;color:var(--text2);margin-top:2px}
-.chart-price-info{text-align:right}
-.chart-cur-price{font-family:var(--mono);font-size:22px;font-weight:700}
-.chart-cur-chg{font-family:var(--mono);font-size:14px;margin-top:2px}
+.chart-sym-info{flex:1;min-width:0}
+.chart-sym-name{font-family:var(--mono);font-size:17px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chart-sym-sub{font-size:13px;color:var(--text2);margin-top:2px}
+.chart-price-info{text-align:right;flex-shrink:0}
+.chart-cur-price{font-family:var(--mono);font-size:20px;font-weight:700}
+.chart-cur-chg{font-family:var(--mono);font-size:13px;margin-top:2px}
 .tf-bar{
-  display:flex;gap:6px;padding:12px 20px 10px;
+  display:flex;gap:6px;padding:12px 16px;
   border-bottom:1px solid var(--border);flex-shrink:0;
+  overflow-x:auto; /* 允許時區按鈕過多時左右滑動，不撐破螢幕 */
+  scrollbar-width: none;
 }
+.tf-bar::-webkit-scrollbar { display: none; }
 .tf-btn{
-  padding:8px 16px;border-radius:20px;font-size:14px;font-weight:600;
+  padding:6px 14px;border-radius:20px;font-size:13px;font-weight:600;
   font-family:var(--mono);cursor:pointer;
   background:var(--bg3);border:1px solid var(--border2);color:var(--text3);
-  transition:all .15s;
+  transition:all .15s;flex-shrink:0;
 }
 .tf-btn.active{background:var(--blue-bg);color:var(--blue);border-color:rgba(96,165,250,.4)}
 #chart-container{flex:1;min-height:0;position:relative}
 .chart-modal-footer{
-  padding:16px 20px;border-top:1px solid var(--border);flex-shrink:0;
+  padding:16px;border-top:1px solid var(--border);flex-shrink:0;
 }
 .tax-row{
   display:flex;justify-content:space-between;align-items:center;
-  padding:10px 0;border-bottom:1px solid var(--border);font-size:15px;
+  padding:10px 0;border-bottom:1px solid var(--border);font-size:14px;
 }
 .tax-row:last-child{border-bottom:none}
 .tax-label{color:var(--text2)}
@@ -393,6 +400,9 @@ input[type="date"]:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(96,1
   .tb { flex: 0 1 auto; padding: 0 32px; font-size: 16px; flex-direction: row; gap: 12px; }
   .tb .tb-icon { font-size: 24px; }
   .tb:hover { background: rgba(255,255,255,0.03); border-radius: 8px 8px 0 0; }
+
+  .risk-stats { grid-template-columns: 1fr 1fr 1fr; }
+  .risk-stats > .metric:nth-child(3) { grid-column: auto; }
 
   .modal-bg, .chart-modal-bg { align-items: center; padding: 40px; }
   .modal, .chart-modal { border-radius: 16px; animation: modalPop 0.3s cubic-bezier(0.16, 1, 0.3, 1); height: auto; margin: auto; }
@@ -434,7 +444,7 @@ input[type="date"]:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(96,1
         <div id="price-dot"></div>
         <span id="price-txt">參考報價</span>
       </div>
-      <div class="rule-clock" id="market-clock" style="font-size:13px">
+      <div class="rule-clock" id="market-clock">
         <span class="dot"></span>
         <span id="market-status-txt">—</span>
       </div>
@@ -530,7 +540,7 @@ input[type="date"]:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(96,1
                 <input type="number" id="order-qty" value="100" min="1" inputmode="numeric" oninput="onQtyChange()">
               </div>
 
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px">
+              <div class="metric-row" style="margin-bottom:18px">
                 <div>
                   <div class="form-label">參考報價</div>
                   <input type="text" id="order-price" readonly>
@@ -577,18 +587,18 @@ input[type="date"]:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(96,1
                 </div>
                 <div class="risk-bar-bg"><div class="risk-bar-fill ok" id="etf-dd-bar" style="width:0%"></div></div>
               </div>
-              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:6px">
-                <div class="metric" style="padding:14px">
+              <div class="risk-stats">
+                <div class="metric">
                   <div class="metric-label">最大回撤</div>
-                  <div class="metric-val neutral" style="font-size:20px" id="etf-dd-val">0.00%</div>
+                  <div class="metric-val neutral" id="etf-dd-val">0.00%</div>
                 </div>
-                <div class="metric" style="padding:14px">
+                <div class="metric">
                   <div class="metric-label">資金使用</div>
-                  <div class="metric-val neutral" style="font-size:20px" id="etf-util">0%</div>
+                  <div class="metric-val neutral" id="etf-util">0%</div>
                 </div>
-                <div class="metric" style="padding:14px">
+                <div class="metric">
                   <div class="metric-label">夏普值</div>
-                  <div class="metric-val neutral" style="font-size:20px" id="etf-sharpe">—</div>
+                  <div class="metric-val neutral" id="etf-sharpe">—</div>
                 </div>
               </div>
             </div>
@@ -609,18 +619,18 @@ input[type="date"]:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(96,1
                 </div>
                 <div class="risk-bar-bg"><div class="risk-bar-fill ok" id="stk-dd-bar" style="width:0%"></div></div>
               </div>
-              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:6px">
-                <div class="metric" style="padding:14px">
+              <div class="risk-stats">
+                <div class="metric">
                   <div class="metric-label">最大回撤</div>
-                  <div class="metric-val neutral" style="font-size:20px" id="stk-dd-val">0.00%</div>
+                  <div class="metric-val neutral" id="stk-dd-val">0.00%</div>
                 </div>
-                <div class="metric" style="padding:14px">
+                <div class="metric">
                   <div class="metric-label">資金使用</div>
-                  <div class="metric-val neutral" style="font-size:20px" id="stk-util">0%</div>
+                  <div class="metric-val neutral" id="stk-util">0%</div>
                 </div>
-                <div class="metric" style="padding:14px">
+                <div class="metric">
                   <div class="metric-label">夏普值</div>
-                  <div class="metric-val neutral" style="font-size:20px" id="stk-sharpe">—</div>
+                  <div class="metric-val neutral" id="stk-sharpe">—</div>
                 </div>
               </div>
             </div>
@@ -647,18 +657,18 @@ input[type="date"]:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(96,1
             </div>
             <div class="card-body" style="padding:0 0 4px">
               <div style="display:flex;border-bottom:1px solid var(--border)">
-                <div class="settle-section-hdr" style="padding:14px 18px 8px;flex:1;border-bottom:none">
+                <div class="settle-section-hdr" style="padding:14px 16px 8px;flex:1;border-bottom:none">
                   ETF 組庫存
                 </div>
               </div>
-              <div id="risk-pos-etf"><div class="empty-state" style="padding:20px">目前無庫存</div></div>
+              <div id="risk-pos-etf"><div class="empty-state">目前無庫存</div></div>
 
               <div style="display:flex;border-bottom:1px solid var(--border);border-top:1px solid var(--border);margin-top:6px">
-                <div class="settle-section-hdr" style="padding:14px 18px 8px;flex:1;border-bottom:none">
+                <div class="settle-section-hdr" style="padding:14px 16px 8px;flex:1;border-bottom:none">
                   個股組庫存
                 </div>
               </div>
-              <div id="risk-pos-stock"><div class="empty-state" style="padding:20px">目前無庫存</div></div>
+              <div id="risk-pos-stock"><div class="empty-state">目前無庫存</div></div>
             </div>
           </div>
 
@@ -678,7 +688,7 @@ input[type="date"]:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(96,1
 
           <div class="card">
             <div class="card-header"><span class="card-title">交易稅彙總</span></div>
-            <div class="card-body" style="padding:0 18px">
+            <div class="card-body" style="padding:0 16px">
               <div class="tax-row">
                 <span class="tax-label">ETF 組 — 已繳交易稅</span>
                 <span class="tax-val" id="tax-etf-amt">$0</span>
@@ -706,7 +716,7 @@ input[type="date"]:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(96,1
           <span class="card-title">NAV 走勢</span>
           <button class="btn btn-sm btn-success" onclick="settleNAV()">結算紀錄</button>
         </div>
-        <div class="card-body" style="padding:10px 18px 18px">
+        <div class="card-body" style="padding:10px 16px 16px">
           <div class="chart-wrap"><canvas id="nav-chart"></canvas></div>
         </div>
       </div>
@@ -719,15 +729,15 @@ input[type="date"]:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(96,1
           <span class="card-title">📅 模擬交易期間</span>
         </div>
         <div class="card-body">
-          <div class="period-status">
+          <div class="period-status" style="display:flex;align-items:center;gap:10px;background:var(--bg3);border-radius:var(--radius-sm);padding:12px;margin-bottom:16px;">
             <div class="period-dot not-set" id="period-dot"></div>
-            <div class="period-status-text">
-              <div id="period-status-label" style="font-size:15px">尚未設定交易期間</div>
-              <div class="sub" id="period-status-sub" style="font-size:13px">請選擇開始與結束日期</div>
+            <div class="period-status-text" style="flex:1;min-width:0">
+              <div id="period-status-label" style="font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">尚未設定交易期間</div>
+              <div class="sub" id="period-status-sub" style="font-size:12px;color:var(--text3);margin-top:2px">請選擇開始與結束日期</div>
             </div>
-            <div class="period-countdown" id="period-countdown" style="font-size:15px"></div>
+            <div class="period-countdown" id="period-countdown" style="font-size:14px;font-family:var(--mono);flex-shrink:0;text-align:right"></div>
           </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+          <div class="metric-row">
             <div>
               <label class="form-label">開始日期</label>
               <input type="date" id="period-start" onchange="onPeriodChange()">
@@ -738,11 +748,11 @@ input[type="date"]:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(96,1
             </div>
           </div>
           <div class="btn-row">
-            <button class="btn btn-primary" style="flex:1" onclick="setPeriod()">設定期間</button>
-            <button class="btn" onclick="clearPeriod()">清除</button>
+            <button class="btn btn-primary" style="flex:2" onclick="setPeriod()">設定期間</button>
+            <button class="btn" style="flex:1" onclick="clearPeriod()">清除</button>
           </div>
           <div id="export-area" style="display:none;margin-top:18px;padding-top:18px;border-top:1px solid var(--border)">
-            <div style="font-size:14px;color:var(--text2);margin-bottom:12px" id="export-hint"></div>
+            <div style="font-size:13px;color:var(--text2);margin-bottom:12px" id="export-hint"></div>
             <button class="btn btn-success btn-full" style="margin-bottom:10px" onclick="exportReport()">📄 匯出績效報告 CSV</button>
             <button class="btn btn-danger btn-full" id="end-period-btn" style="display:none" onclick="endPeriodAndClear()">⏹ 結束期間並清除所有紀錄</button>
           </div>
@@ -783,7 +793,7 @@ input[type="date"]:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(96,1
           <div class="card">
             <div class="card-header"><span class="card-title" style="color:var(--red)">重置比賽</span></div>
             <div class="card-body">
-              <p style="font-size:14px;color:var(--text2);margin-bottom:16px">將所有庫存、訂單與資金歸零，重新開始一場新的模擬賽。</p>
+              <p style="font-size:13px;color:var(--text2);margin-bottom:16px;line-height:1.6">將所有庫存、訂單與資金歸零，重新開始一場新的模擬賽。</p>
               <button class="btn btn-danger btn-full" onclick="resetAll()">⚠ 全部重置</button>
             </div>
           </div>
@@ -806,7 +816,7 @@ input[type="date"]:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(96,1
         <div class="chart-cur-price" id="chart-cur-price">—</div>
         <div class="chart-cur-chg" id="chart-cur-chg">—</div>
       </div>
-      <button class="modal-close" style="margin-left:16px" onclick="closeChartModal()">✕</button>
+      <button class="modal-close" style="margin-left:8px" onclick="closeChartModal()">✕</button>
     </div>
     <div class="tf-bar">
       <div class="tf-btn active" id="tf-1W" onclick="setTf('1W')">1W</div>
@@ -816,10 +826,10 @@ input[type="date"]:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(96,1
       <div class="tf-btn" id="tf-1Y" onclick="setTf('1Y')">1Y</div>
       <div class="tf-btn" id="tf-3Y" onclick="setTf('3Y')">3Y</div>
     </div>
-    <div id="chart-container" style="position:relative">
+    <div id="chart-container">
       <div id="chart-loading" style="display:none;position:absolute;inset:0;background:rgba(18,21,28,.85);z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px">
-        <div style="width:36px;height:36px;border:3px solid var(--border2);border-top-color:var(--blue);border-radius:50%;animation:spin .7s linear infinite"></div>
-        <div style="font-size:14px;color:var(--text2)">載入中...</div>
+        <div style="width:32px;height:32px;border:3px solid var(--border2);border-top-color:var(--blue);border-radius:50%;animation:spin .7s linear infinite"></div>
+        <div style="font-size:13px;color:var(--text2)">載入中...</div>
       </div>
     </div>
     <div class="chart-modal-footer">
@@ -893,7 +903,7 @@ input[type="date"]:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(96,1
         </div>
         <div style="text-align:right">
           <span class="sc-total-val" id="sc-total">0</span>
-          <span style="color:var(--text3);font-family:var(--mono);font-size:16px"> / 25</span>
+          <span style="color:var(--text3);font-family:var(--mono);font-size:15px"> / 25</span>
         </div>
       </div>
     </div>
@@ -1107,7 +1117,7 @@ function renderTickers() {
         <div class="ticker-price" style="color:${clr}">${s.price.toFixed(s.price < 100 ? 2 : 0)}</div>
         <div class="ticker-chg" style="color:${clr}">${sign} ${Math.abs(chgRate).toFixed(2)}%</div>
       </div>
-      <div style="color:var(--text3);font-size:22px;padding-left:8px">›</div>
+      <div style="color:var(--text3);font-size:20px;padding-left:4px">›</div>
     </div>`;
   }
   qs('ticker-list').innerHTML = html || '<div class="empty-state">無商品資料</div>';
@@ -1354,7 +1364,7 @@ function openReview(id) {
   const sc = o.scorecard;
   const qLabels = ['技術面訊號','基本面依據','停損設定','部位合理性','目標報酬'];
   let html = `
-    <div style="background:var(--bg3);border-radius:8px;padding:16px;margin-bottom:18px;display:flex;flex-wrap:wrap;gap:12px">
+    <div style="background:var(--bg3);border-radius:8px;padding:14px;margin-bottom:16px;display:flex;flex-wrap:wrap;gap:12px">
       <div class="sc-sum-item"><div class="sc-sum-label">商品</div><div class="sc-sum-val">${o.symbol.replace('.TW','')} ${o.name}</div></div>
       <div class="sc-sum-item"><div class="sc-sum-label">方向</div><div class="sc-sum-val" style="color:${o.side==='buy'?'var(--green)':'var(--red)'}">${o.side==='buy'?'買入':'賣出'}</div></div>
       <div class="sc-sum-item"><div class="sc-sum-label">數量</div><div class="sc-sum-val">${o.qty}</div></div>
@@ -1366,7 +1376,7 @@ function openReview(id) {
     const clr = v >= 4 ? 'var(--green)' : v >= 3 ? 'var(--blue)' : v >= 2 ? 'var(--amber)' : 'var(--red)';
     html += `<div class="review-sc-row">
       <div class="sc-q-num">${i}</div>
-      <div style="flex:1">
+      <div style="flex:1;min-width:0">
         <div class="review-sc-q">${qLabels[i-1]}</div>
         <div class="review-sc-reason">${sc.reasons[i]||'（未填寫）'}</div>
       </div>
@@ -1374,9 +1384,9 @@ function openReview(id) {
     </div>`;
   }
   html += `</div>
-    <div style="background:var(--bg3);border-radius:8px;padding:16px;display:flex;justify-content:space-between;align-items:center">
-      <span style="color:var(--text2);font-size:15px">計分卡總分</span>
-      <span style="font-family:var(--mono);font-size:26px;font-weight:700;color:${sc.total>=16?'var(--green)':sc.total>=10?'var(--blue)':'var(--red)'}">${sc.total} <span style="font-size:16px;color:var(--text3)">/ 25</span></span>
+    <div style="background:var(--bg3);border-radius:8px;padding:14px;display:flex;justify-content:space-between;align-items:center">
+      <span style="color:var(--text2);font-size:14px">計分卡總分</span>
+      <span style="font-family:var(--mono);font-size:24px;font-weight:700;color:${sc.total>=16?'var(--green)':sc.total>=10?'var(--blue)':'var(--red)'}">${sc.total} <span style="font-size:14px;color:var(--text3)">/ 25</span></span>
     </div>`;
   qs('review-content').innerHTML = html;
   qs('review-comment').value = '';
@@ -1570,18 +1580,18 @@ function renderRiskPositions() {
         const wt = nav > 0 ? (mv / nav * 100).toFixed(1) : 0;
         const cl = pnl >= 0 ? 'var(--green)' : 'var(--red)';
         return `<div class="order-item">
-          <div class="order-top" style="align-items:flex-start">
-            <div style="flex:1">
-              <div style="display:flex;align-items:center;gap:8px">
+          <div class="order-top">
+            <div>
+              <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
                 <span class="order-sym">${p.symbol.replace('.TW','')}</span>
                 <span class="badge badge-${grp}">${grp === 'etf' ? 'ETF' : '個股'}</span>
               </div>
               <div class="order-meta">${p.qty} 股 · 均價 ${p.avgPrice.toFixed(p.avgPrice<100?2:0)} · 現價 ${cur.toFixed(cur<100?2:0)}</div>
               <div class="order-meta">庫存佔比 ${wt}% · <span style="color:${cl}">${pnl>=0?'+':''}${Math.round(pnl).toLocaleString()} (${pct(pnlPct)})</span></div>
             </div>
-            <div style="text-align:right">
+            <div>
               <div class="order-amount" style="color:${cl}">${money(mv)}</div>
-              <div style="display:flex;gap:8px;margin-top:10px">
+              <div style="display:flex;gap:6px;margin-top:8px">
                 <button class="btn btn-sm" onclick="riskPartialClose('${grp}','${p.symbol}',${p.qty})">部分</button>
                 <button class="btn btn-sm btn-danger" onclick="riskCloseAll('${grp}','${p.symbol}',${p.qty})">全數</button>
               </div>
@@ -1592,7 +1602,7 @@ function renderRiskPositions() {
     }
 
     html += `
-      <div style="padding:14px 18px;border-top:1px solid var(--border);display:flex;justify-content:flex-end">
+      <div style="padding:14px 16px;border-top:1px solid var(--border);display:flex;justify-content:flex-end">
         <button class="btn btn-sm btn-danger" onclick="riskCloseGroup('${grp}')">⚠ 整組全部出清</button>
       </div>`;
 
@@ -1795,12 +1805,12 @@ function renderPositions() {
     return `<div class="pos-item">
       <div class="pos-top">
         <div>
-          <div class="pos-sym">${p.symbol.replace('.TW','')} <span style="font-size:14px;color:var(--text2);font-family:var(--sans)">${s?s.name:''}</span></div>
-          <div style="font-size:14px;color:var(--text3);margin-top:4px">持有 ${p.qty} 股 · 均價 ${p.avgPrice.toFixed(p.avgPrice<100?2:0)}</div>
+          <div class="pos-sym">${p.symbol.replace('.TW','')} <span style="font-size:13px;color:var(--text2);font-family:var(--sans);white-space:nowrap">${s?s.name:''}</span></div>
+          <div style="font-size:13px;color:var(--text3);margin-top:4px">持有 ${p.qty} 股 · 均價 ${p.avgPrice.toFixed(p.avgPrice<100?2:0)}</div>
         </div>
         <div class="pos-pnl" style="color:${cl}">
           ${pnl>=0?'+':''}${pnl.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g,',')}
-          <div style="font-size:13px">${pct(pnlPct)}</div>
+          <div style="font-size:12px">${pct(pnlPct)}</div>
         </div>
       </div>
       <div class="pos-detail">
@@ -1832,12 +1842,12 @@ function renderPendingList() {
       return `<div class="order-item">
         <div class="order-top">
           <div>
-            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+            <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
               <span class="order-sym">${o.symbol.replace('.TW','')}</span>
               <span class="badge badge-${o.side}">${o.side==='buy'?'買':'賣'}</span>
               <span class="badge badge-${o.group}">${o.group==='etf'?'ETF':'個股'}</span>
             </div>
-            <div class="order-meta">${o.qty} 股 · 計分 ${o.scorecard.total}/25 · 送出 ${o.time}</div>
+            <div class="order-meta">${o.qty} 股 · 計分 ${o.scorecard.total}/25<br>送出 ${o.time}</div>
             <div class="order-meta" style="color:var(--blue)">結算日：${sd}</div>
           </div>
           <div>
@@ -1857,14 +1867,14 @@ function renderPendingList() {
       return `<div class="order-item">
         <div class="order-top">
           <div>
-            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+            <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
               <span class="order-sym">${o.symbol.replace('.TW','')}</span>
               <span class="badge badge-${o.side}">${o.side==='buy'?'買':'賣'}</span>
               <span class="badge badge-approved">已核准</span>
               ${locked ? '<span class="badge" style="background:var(--red-bg);color:var(--red);border:1px solid var(--red-bd)">🔒 已鎖定</span>' : ''}
             </div>
             <div class="order-meta">${o.qty} 股 · 結算日：${sd}</div>
-            <div class="order-meta" style="color:var(--amber)">${locked ? '收盤後不可取消，等待結算' : '可於 13:30 前取消'}</div>
+            <div class="order-meta" style="color:var(--amber)">${locked ? '等待結算' : '13:30前可取消'}</div>
           </div>
           <div>
             <div class="order-amount">${money(o.amount)}</div>
@@ -1967,7 +1977,7 @@ function renderHistory() {
     <div class="order-item">
       <div class="order-top">
         <div>
-          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
             <span class="order-sym">${o.symbol.replace('.TW','')}</span>
             <span class="badge badge-${o.side}">${o.side==='buy'?'買入':'賣出'}</span>
             <span class="badge ${o.status==='approved'?'badge-approved':o.status==='executed'?'badge-executed':o.status==='rejected'?'badge-rejected':'badge-pending'}">${{pending:'待審',approved:'待結算',executed:'成交',rejected:'駁回'}[o.status]||o.status}</span>
@@ -2273,152 +2283,4 @@ function exportReport() {
     const avgSc = gOrders.length
       ? (gOrders.reduce((s, o) => s + (o.scorecard.total || 0), 0) / gOrders.length).toFixed(1)
       : '—';
-    rows.push([g.name, Math.round(nav), INITIAL, Math.round(ret), retPct, g.maxDD.toFixed(2)+'%', g.tradeCount, avgSc]);
-  }
-  rows.push([]);
-
-  rows.push(['=== 二、交易明細（已成交） ===']);
-  rows.push(['下單時間','組別','商品代號','商品名稱','方向','數量(股)','成交參考價','成交金額','計分卡分數','計畫書摘要']);
-  const sorted = [...allOrders].sort((a,b) => a.time.localeCompare(b.time));
-  for (const o of sorted) {
-    const reasons = [1,2,3,4,5].map(i => 'Q'+i+':'+(o.scorecard.reasons && o.scorecard.reasons[i] ? o.scorecard.reasons[i] : '')).join(' | ');
-    rows.push([
-      o.time,
-      o.group === 'etf' ? 'ETF組' : '個股組',
-      o.symbol, o.name,
-      o.side === 'buy' ? '買入' : '賣出',
-      o.qty, o.price, o.settlement_date||'—', o.settlement_price||'—', Math.round(o.amount),
-      (o.tax || 0),
-      o.scorecard.total + '/25',
-      '"' + reasons.replace(/"/g, '""') + '"'
-    ]);
-  }
-  if (!sorted.length) rows.push(['（無成交紀錄）']);
-  rows.push([]);
-
-  rows.push(['=== 三、期末庫存（參考） ===']);
-  rows.push(['組別','商品代號','商品名稱','持有股數','成本均價','現值參考','未實現損益']);
-  for (const grp of ['etf', 'stock']) {
-    const g = state.groups[grp];
-    if (!g.positions.length) { rows.push([g.name, '（目前無庫存）']); continue; }
-    for (const p of g.positions) {
-      const s = state.securities[p.symbol];
-      const cur = s ? s.price : p.avgPrice;
-      const pnl = (cur - p.avgPrice) * p.qty;
-      rows.push([g.name, p.symbol, s ? s.name : '', p.qty, p.avgPrice.toFixed(2), (cur*p.qty).toFixed(0), pnl.toFixed(0)]);
-    }
-  }
-  rows.push([]);
-
-  rows.push(['=== 四、風控紀錄 ===']);
-  rows.push(['組別','最大回撤','回撤上限','是否超限','目前狀態']);
-  for (const grp of ['etf', 'stock']) {
-    const g = state.groups[grp];
-    const lim = grp === 'etf' ? state.limits.etf : state.limits.stk;
-    rows.push([g.name, g.maxDD.toFixed(2)+'%', lim+'%', g.maxDD > lim ? '是' : '否', g.frozen ? '凍結中' : '正常']);
-  }
-
-  const csv = '\uFEFF' + rows.map(r => Array.isArray(r) ? r.join(',') : r).join('\n');
-  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
-  const url  = URL.createObjectURL(blob);
-  const a    = document.createElement('a');
-  a.href = url;
-  a.download = 'SimTrade_報告_' + new Date().toISOString().slice(0,10) + '.csv';
-  a.click();
-  URL.revokeObjectURL(url);
-  toast('CSV 已匯出', 'success');
-}
-
-// ========== LOAD ORDERS FROM DB ==========
-function replayOrder(order) {
-  const g = state.groups[order.group];
-  if (!g) return;
-  const cost = order.price * order.qty;
-  const taxRate = state.securities[order.symbol]?.grp === 'etf' ? 0.001 : 0.003;
-  const tax = order.side === 'sell' ? Math.round(cost * taxRate) : 0;
-  order.tax = tax;
-  g.totalTax += tax;
-  if (order.side === 'sell') g.totalTurnover += cost;
-  if (order.side === 'buy') {
-    g.cash -= cost;
-    const ex = g.positions.find(p => p.symbol === order.symbol);
-    if (ex) { ex.avgPrice = (ex.avgPrice * ex.qty + cost) / (ex.qty + order.qty); ex.qty += order.qty; }
-    else g.positions.push({ symbol: order.symbol, qty: order.qty, avgPrice: order.price });
-  } else {
-    const pos = g.positions.find(p => p.symbol === order.symbol);
-    if (pos) {
-      g.cash += (cost - tax);
-      pos.qty -= order.qty;
-      if (pos.qty === 0) g.positions = g.positions.filter(p => p.symbol !== order.symbol);
-    }
-  }
-  g.tradeCount++;
-  const nav = calcNAV(order.group);
-  const prev = g.navHistory.length ? g.navHistory[g.navHistory.length-1].nav : INITIAL;
-  g.returns.push((nav - prev) / prev * 100);
-  g.navHistory.push({ t: Date.now(), nav });
-}
-
-async function loadOrdersFromDB() {
-  const { data, error } = await db.from('orders').select('*').order('created_at', { ascending: true });
-  if (error || !data) return;
-  state.groups.etf   = mkGroup('ETF 組');
-  state.groups.stock = mkGroup('個股組');
-  state.orders = [];
-  state.pendingApproval = [];
-  for (const o of data) {
-    const order = {
-      id: o.id, time: o.time, symbol: o.symbol, name: o.name,
-      qty: +o.qty, side: o.side, price: +o.price, amount: +o.amount,
-      group: o.grp, status: o.status, comment: o.comment,
-      scorecard: o.scorecard
-    };
-    state.orders.push(order);
-    if (order.status === 'pending') {
-      state.pendingApproval.push(order);
-    } else if (order.status === 'approved') {
-      state.approvedPending.push(order);
-    } else if (order.status === 'executed') {
-      replayOrder(order);
-    }
-  }
-}
-
-async function clearOrdersFromDB() {
-  await db.from('orders').delete().neq('id', '___none___');
-  state.groups.etf   = mkGroup('ETF 組');
-  state.groups.stock = mkGroup('個股組');
-  state.orders = [];
-  state.pendingApproval = [];
-  state.approvedPending = [];
-}
-
-async function endPeriodAndClear() {
-  if (!confirm('確定結束交易期間並清除所有紀錄？\n建議先匯出 CSV 再執行此操作。')) return;
-  await clearOrdersFromDB();
-  clearPeriod();
-  toast('交易期間已結束，紀錄已清除', 'info');
-  updateAllMetrics(); renderNavChart(); renderHistory();
-}
-
-// ========== INIT ==========
-async function init() {
-  const today = new Date().toISOString().slice(0,10);
-  const next7 = new Date(Date.now() + 7*86400000).toISOString().slice(0,10);
-  if (qs('period-start')) qs('period-start').value = today;
-  if (qs('period-end'))   qs('period-end').value   = next7;
-
-  updateMarketStatusBanner();
-  setupRealtime();
-  await fetchInitialPrices();
-  await loadOrdersFromDB();
-  updateAllMetrics();
-  renderNavChart();
-  await triggerPriceUpdate();
-  setInterval(triggerPriceUpdate, 10000);
-}
-
-init();
-</script>
-</body>
-</html>
+    rows.push([g.name, Math.round(nav), INITIAL, Math.round(ret), retPct, g.maxDD.toFixed(2)+'%', g.tradeCount, avg
