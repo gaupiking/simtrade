@@ -1670,8 +1670,8 @@ function renderTickerRow(sym, grp = state.group) {
   if (!s) return '';
   const g = state.groups[grp];
   const chgRate = s.changeRate ?? 0;
-  const clr = 'var(--text)';
-  const sign = chgRate >= 0 ? '▲' : '▼';
+  const clr = chgRate === 0 ? 'var(--text)' : (chgRate > 0 ? 'var(--green)' : 'var(--red)');
+  const sign = chgRate === 0 ? '•' : (chgRate > 0 ? '▲' : '▼');
   const isHeld = g.positions.some(p => p.symbol === sym);
   const delDisabled = !canDeleteTicker(sym, grp);
   return `
