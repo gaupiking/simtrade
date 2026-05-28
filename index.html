@@ -1174,7 +1174,7 @@ function ensureTickerVisible(grp, symbol) {
 }
 
 function mkGroup(name) {
-  return { name, cash: INITIAL, positions: [], navHistory: [{t: Date.now(), nav: INITIAL}], frozen: false, peakNAV: INITIAL, maxDD: 0, tradeCount: 0, returns: [], totalTax: 0, totalFee: 0, totalTurnover: 0, realizedPnl: 0, totalDividend: 0 };
+  return { name, cash: INITIAL, positions: [], navHistory: [{ t: 0, nav: INITIAL, dayKey: '1970-01-01', source: 'initial' }], frozen: false, peakNAV: INITIAL, maxDD: 0, tradeCount: 0, returns: [], totalTax: 0, totalFee: 0, totalTurnover: 0, realizedPnl: 0, totalDividend: 0 };
 }
 
 // ========== UTILS ==========
@@ -2319,14 +2319,91 @@ async function fullClose(sym, qty) {
 }
 
 // ========== METRICS ==========
-function calcNAV(grp) {
+function fmtNavDayKey(ts) {
+  if (!Number.isFinite(+ts) || +ts <= 0) return '1970-01-01';
+  const d = new Date(+ts);
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+}
+
+function navDayKeyToTs(dayKey) {
+  if (!dayKey || dayKey === '1970-01-01') return 0;
+  const [y, m, d] = dayKey.split('-').map(Number);
+  return new Date(y, m - 1, d, 23, 59, 59, 999).getTime();
+}
+
+function normalizeNavHistoryPoints(navHistory) {
+  const byDay = new Map();
+  byDay.set('1970-01-01', { t: 0, nav: INITIAL, dayKey: '1970-01-01', source: 'initial' });
+
+  for (const raw of Array.isArray(navHistory) ? navHistory : []) {
+    const nav = Number(raw?.nav);
+    if (!Number.isFinite(nav)) continue;
+    const rawTs = Number(raw?.rawT ?? raw?.t ?? 0);
+    const dayKey = raw?.dayKey || fmtNavDayKey(rawTs);
+    const normalized = {
+      ...raw,
+      dayKey,
+      nav,
+      rawT: rawTs,
+      t: navDayKeyToTs(dayKey)
+    };
+    const prev = byDay.get(dayKey);
+    if (!prev || rawTs >= Number(prev.rawT ?? prev.t ?? 0)) byDay.set(dayKey, normalized);
+  }
+
+  return [...byDay.values()]
+    .map(({ rawT, ...rest }) => rest)
+    .sort((a, b) => (a.t || 0) - (b.t || 0));
+}
+
+function calcMarkedNav(grp, priceMarks = null) {
   const g = state.groups[grp];
   let mv = 0;
   for (const p of g.positions) {
-    const s = state.securities[p.symbol];
-    if (s) mv += s.price * p.qty;
+    const mark = priceMarks && Number.isFinite(+priceMarks[p.symbol]) ? +priceMarks[p.symbol] : null;
+    const live = Number(state.securities?.[p.symbol]?.price);
+    const fallback = Number(p.avgPrice);
+    const px = Number.isFinite(mark) && mark > 0
+      ? mark
+      : Number.isFinite(live) && live > 0
+        ? live
+        : Number.isFinite(fallback) && fallback > 0
+          ? fallback
+          : 0;
+    mv += px * p.qty;
   }
   return g.cash + mv;
+}
+
+function upsertNavHistoryPoint(grp, ts = Date.now(), nav = calcNAV(grp)) {
+  const g = state.groups[grp];
+  if (!g) return null;
+  const dayKey = fmtNavDayKey(ts);
+  const point = {
+    t: navDayKeyToTs(dayKey),
+    rawT: Number(ts) || Date.now(),
+    nav: Number(nav),
+    dayKey,
+    source: 'nav'
+  };
+  if (!Number.isFinite(point.nav)) return null;
+  if (!Array.isArray(g.navHistory)) g.navHistory = [];
+  const idx = g.navHistory.findIndex(h => (h?.dayKey || fmtNavDayKey(h?.rawT ?? h?.t ?? 0)) === dayKey);
+  if (idx >= 0) g.navHistory[idx] = { ...g.navHistory[idx], ...point };
+  else g.navHistory.push(point);
+  g.navHistory = normalizeNavHistoryPoints(g.navHistory);
+  return point.nav;
+}
+
+function recordLiveNavHistory() {
+  for (const grp of ['etf', 'stock']) upsertNavHistoryPoint(grp, Date.now(), calcNAV(grp));
+}
+
+function calcNAV(grp) {
+  return calcMarkedNav(grp);
 }
 
 function calcDD(grp) {
@@ -2339,11 +2416,20 @@ function calcDD(grp) {
 }
 
 function calcSharpe(grp) {
-  const rets = state.groups[grp].returns;
+  const points = normalizeNavHistoryPoints(state.groups[grp]?.navHistory).filter(p => (p.t || 0) > 0);
+  if (points.length < 3) return null;
+  const rets = [];
+  for (let i = 1; i < points.length; i++) {
+    const prev = Number(points[i - 1].nav);
+    const curr = Number(points[i].nav);
+    if (prev > 0 && Number.isFinite(curr)) rets.push((curr / prev) - 1);
+  }
   if (rets.length < 2) return null;
-  const avg = rets.reduce((a,b) => a+b, 0) / rets.length;
-  const std = Math.sqrt(rets.reduce((s,r) => s + (r-avg)**2, 0) / rets.length);
-  return std > 0 ? (avg / std * Math.sqrt(252)).toFixed(2) : null;
+  const avg = rets.reduce((a, b) => a + b, 0) / rets.length;
+  const variance = rets.reduce((sum, r) => sum + (r - avg) ** 2, 0) / (rets.length - 1);
+  const std = Math.sqrt(variance);
+  if (!Number.isFinite(std) || std === 0) return null;
+  return (avg / std * Math.sqrt(252)).toFixed(2);
 }
 
 function calcUtil(grp) {
@@ -2351,13 +2437,16 @@ function calcUtil(grp) {
   const nav = calcNAV(grp);
   let mv = 0;
   for (const p of g.positions) {
-    const s = state.securities[p.symbol];
-    if (s) mv += s.price * p.qty;
+    const px = Number(state.securities?.[p.symbol]?.price);
+    const fallback = Number(p.avgPrice);
+    const price = Number.isFinite(px) && px > 0 ? px : (Number.isFinite(fallback) && fallback > 0 ? fallback : 0);
+    mv += price * p.qty;
   }
   return nav > 0 ? (mv / nav * 100).toFixed(1) : 0;
 }
 
 function updateAllMetrics() {
+  recordLiveNavHistory();
   for (const grp of ['etf', 'stock']) {
     const g = state.groups[grp];
     const dd = calcDD(grp);
@@ -2396,6 +2485,9 @@ function updateAllMetrics() {
   renderPerformanceReport();
   renderDividendForecastReport();
   updateNavMini();
+
+
+  if (qs('panel-risk')?.classList.contains('active')) renderNavChart();
 }
 
 function calcUnrealizedPnl(grp) {
@@ -2542,10 +2634,7 @@ function unfreezeGroup(grp) {
 }
 
 function settleNAV() {
-  for (const grp of ['etf','stock']) {
-    const nav = calcNAV(grp);
-    state.groups[grp].navHistory.push({ t: Date.now(), nav });
-  }
+  recordLiveNavHistory();
   toast('NAV 結算已記錄', 'success');
   renderNavChart();
 }
@@ -2593,9 +2682,9 @@ function getTradingDaysInRange(start, end) {
 
 function buildNavSeriesForPeriod(navHistory, tradingDays) {
   if (!tradingDays.length) return [];
-  const sorted = [...navHistory].sort((a, b) => (a.t || 0) - (b.t || 0));
+  const sorted = normalizeNavHistoryPoints(navHistory);
   let idx = 0;
-  let lastNav = sorted[0]?.nav ?? INITIAL;
+  let lastNav = INITIAL;
   const series = [];
 
   for (const day of tradingDays) {
@@ -2609,27 +2698,46 @@ function buildNavSeriesForPeriod(navHistory, tradingDays) {
 }
 
 function renderNavChart() {
-  const el = qs('nav-chart'); if (!el) return;
+  const el = qs('nav-chart');
+  if (!el) return;
   const title = qs('nav-compare-note');
 
   const hasPeriod = period.start && period.end;
   const tradingDays = hasPeriod ? getTradingDaysInRange(period.start, period.end) : [];
+  const eHistory = normalizeNavHistoryPoints(state.groups.etf.navHistory).filter(p => (p.t || 0) > 0);
+  const sHistory = normalizeNavHistoryPoints(state.groups.stock.navHistory).filter(p => (p.t || 0) > 0);
 
-  let labels, eNavSeries, sNavSeries;
+  let labels = [];
+  let eNavSeries = [];
+  let sNavSeries = [];
 
   if (tradingDays.length >= 2) {
     labels = tradingDays.map(d => d.label);
     eNavSeries = buildNavSeriesForPeriod(state.groups.etf.navHistory, tradingDays);
     sNavSeries = buildNavSeriesForPeriod(state.groups.stock.navHistory, tradingDays);
   } else {
-    const eH = state.groups.etf.navHistory;
-    const sH = state.groups.stock.navHistory;
-    const maxL = Math.max(eH.length, sH.length, 2);
-    labels = Array.from({length:maxL}, (_,i) => i===0 ? '開始' : 'D'+i);
-    eNavSeries = eH.map(h => Math.round(h.nav));
-    sNavSeries = sH.map(h => Math.round(h.nav));
-    while (eNavSeries.length < maxL) eNavSeries.push(eNavSeries[eNavSeries.length-1] ?? INITIAL);
-    while (sNavSeries.length < maxL) sNavSeries.push(sNavSeries[sNavSeries.length-1] ?? INITIAL);
+    const dayMap = new Map();
+    for (const p of [...eHistory, ...sHistory]) {
+      if (!dayMap.has(p.dayKey)) {
+        const dt = new Date(p.t);
+        dayMap.set(p.dayKey, `${String(dt.getMonth() + 1).padStart(2, '0')}/${String(dt.getDate()).padStart(2, '0')}`);
+      }
+    }
+    const keys = [...dayMap.keys()].sort();
+    if (!keys.length) {
+      labels = ['開始', '今天'];
+      eNavSeries = [INITIAL, calcNAV('etf')];
+      sNavSeries = [INITIAL, calcNAV('stock')];
+    } else {
+      labels = keys.map(k => dayMap.get(k));
+      eNavSeries = keys.map(k => (eHistory.find(p => p.dayKey === k)?.nav ?? eNavSeries[eNavSeries.length - 1] ?? INITIAL));
+      sNavSeries = keys.map(k => (sHistory.find(p => p.dayKey === k)?.nav ?? sNavSeries[sNavSeries.length - 1] ?? INITIAL));
+      if (labels.length === 1) {
+        labels = ['開始', labels[0]];
+        eNavSeries = [INITIAL, eNavSeries[0]];
+        sNavSeries = [INITIAL, sNavSeries[0]];
+      }
+    }
   }
 
   const eBase = eNavSeries[0] || INITIAL;
@@ -2653,30 +2761,28 @@ function renderNavChart() {
       labels,
       datasets: [
         {
-          label:'ETF 組',
-          data:eData,
-          borderColor:'#3b82f6',
-          backgroundColor:'rgba(59,130,246,.18)',
-          pointBackgroundColor:'#60a5fa',
-          pointBorderColor:'#bfdbfe',
-          pointHoverRadius:5,
-          borderWidth:3,
-          pointRadius: tradingDays.length > 20 ? 0 : 2,
-          tension:.32,
-          fill:true,
+          label: 'ETF 組',
+          data: eData,
+          borderColor: '#3b82f6',
+          backgroundColor: 'rgba(59,130,246,.18)',
+          pointBackgroundColor: '#60a5fa',
+          pointRadius: labels.length > 12 ? 0 : 2,
+          pointHoverRadius: 4,
+          borderWidth: 2,
+          fill: false,
+          tension: .25
         },
         {
-          label:'個股組',
-          data:sData,
-          borderColor:'#f59e0b',
-          backgroundColor:'rgba(245,158,11,.14)',
-          pointBackgroundColor:'#fbbf24',
-          pointBorderColor:'#fde68a',
-          pointHoverRadius:5,
-          borderWidth:3,
-          pointRadius: tradingDays.length > 20 ? 0 : 2,
-          tension:.32,
-          fill:true,
+          label: '個股組',
+          data: sData,
+          borderColor: '#f59e0b',
+          backgroundColor: 'rgba(245,158,11,.18)',
+          pointBackgroundColor: '#fbbf24',
+          pointRadius: labels.length > 12 ? 0 : 2,
+          pointHoverRadius: 4,
+          borderWidth: 2,
+          fill: false,
+          tension: .25
         }
       ]
     },
@@ -2685,28 +2791,24 @@ function renderNavChart() {
       maintainAspectRatio: false,
       interaction: { mode: 'index', intersect: false },
       plugins: {
-        legend: {
-          display: true,
-          labels: { color:'#a8b3c7', font:{size:13, weight:'600'}, boxWidth:14, usePointStyle:true }
-        },
+        legend: { labels: { color: '#e2e8f0' } },
         tooltip: {
           callbacks: {
-            label: (ctx) => `${ctx.dataset.label} ${ctx.raw >= 0 ? '+' : ''}${(+ctx.raw).toFixed(2)}%`
+            label: ctx => `${ctx.dataset.label} ${ctx.raw >= 0 ? '+' : ''}${Number(ctx.raw).toFixed(2)}%`
           }
         }
       },
       scales: {
         x: {
-          grid:{ color:'rgba(255,255,255,.05)' },
-          ticks:{ color:'#64748b', font:{size:12}, maxRotation:0, autoSkip:true, maxTicksLimit:8 }
+          ticks: { color: '#94a3b8', maxRotation: 0 },
+          grid: { color: 'rgba(255,255,255,.05)' }
         },
         y: {
-          grid:{ color:'rgba(255,255,255,.06)' },
-          ticks:{
-            color:'#64748b',
-            font:{size:12},
-            callback: v => `${v >= 0 ? '+' : ''}${(+v).toFixed(1)}%`
-          }
+          ticks: {
+            color: '#94a3b8',
+            callback: v => `${v >= 0 ? '+' : ''}${Number(v).toFixed(1)}%`
+          },
+          grid: { color: 'rgba(255,255,255,.06)' }
         }
       }
     }
@@ -3247,13 +3349,16 @@ function exportReport() {
 function replayOrder(order) {
   normalizeOrderFinancials(order);
 
-  const g = state.groups[order.group];
+  const grp = order.group || order.grp;
+  const g = state.groups[grp];
   if (!g) return;
+  if (!g.replayMarks) g.replayMarks = {};
 
   const grossAmount = order.amount;
   const feeAmount = order.fee_amount;
   const taxAmount = order.tax_amount;
   const settlementAmount = order.settlement_amount;
+  const markPrice = Number(order.settlement_price ?? order.price);
 
   if (order.side === 'buy') {
     g.cash -= settlementAmount;
@@ -3282,22 +3387,26 @@ function replayOrder(order) {
     }
   }
 
+  if (Number.isFinite(markPrice) && markPrice > 0) g.replayMarks[order.symbol] = markPrice;
+
   order.tax = taxAmount;
   g.totalTax += taxAmount;
   g.totalFee += feeAmount;
   g.totalTurnover += grossAmount;
   g.tradeCount++;
 
-  const nav = calcNAV(order.group);
-  const prev = g.navHistory.length ? g.navHistory[g.navHistory.length - 1].nav : INITIAL;
-  g.returns.push((nav - prev) / prev * 100);
-  g.navHistory.push({ t: Date.now(), nav });
+  const nav = calcMarkedNav(grp, g.replayMarks);
+  const ts = order.settlement_date
+    ? new Date(`${order.settlement_date}T${order.time || '13:30:00'}+08:00`).getTime()
+    : Date.now();
+  upsertNavHistoryPoint(grp, ts, nav);
 }
 
 function replayPortfolioEvent(ev) {
   const grp = ev.grp;
   const g = state.groups[grp];
   if (!g) return;
+  if (!g.replayMarks) g.replayMarks = {};
 
   const cashAmount = +(ev.cash_amount || 0);
   const shareDelta = +(ev.share_delta || 0);
@@ -3320,11 +3429,9 @@ function replayPortfolioEvent(ev) {
     pos.avgPrice = oldCost / newQty;
   }
 
-  const nav = calcNAV(grp);
-  const prev = g.navHistory.length ? g.navHistory[g.navHistory.length - 1].nav : INITIAL;
-  g.returns.push((nav - prev) / prev * 100);
-  const t = ev.event_date ? new Date(ev.event_date + 'T09:00:00+08:00').getTime() : Date.now();
-  g.navHistory.push({ t, nav });
+  const nav = calcMarkedNav(grp, g.replayMarks);
+  const ts = ev.event_date ? new Date(`${ev.event_date}T09:00:00+08:00`).getTime() : Date.now();
+  upsertNavHistoryPoint(grp, ts, nav);
 }
 
 function rebuildPortfolioFromTimeline() {
